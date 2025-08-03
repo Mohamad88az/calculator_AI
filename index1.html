@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماشین حساب هوشمند AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+        }
+        
+        .calculator-button {
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        
+        .calculator-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .calculator-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .display {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border: 2px solid #475569;
+        }
+        
+        .operator-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .operator-btn:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+        
+        .number-btn {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+        
+        .number-btn:hover {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+        }
+        
+        .equals-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .equals-btn:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .clear-btn:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+        }
+        
+        .function-btn {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+        
+        .function-btn:hover {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+        }
+
+        .ai-thinking {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .neural-network {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .ai-response {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-left: 4px solid #4f46e5;
+        }
+
+        .learning-indicator {
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .voice-wave {
+            animation: wave 1.5s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }
+
+        .ai-brain {
+            background: radial-gradient(circle, #667eea 0%, #764ba2 100%);
+            animation: brain-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes brain-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-gray-800 rounded-3xl shadow-2xl p-6 w-full max-w-md border border-gray-700">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-white mb-2">🧠 ماشین حساب هوشمند AI</h1>
+            <div class="w-16 h-1 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full"></div>
+            <div class="mt-2 text-xs text-gray-400">نسل جدید محاسبات هوشمند</div>
+        </div>
+        
+        <div class="mb-4 bg-gradient-to-r from-blue-900 to-purple-900 rounded-xl p-3 border border-blue-500">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <div id="aiStatusIcon" class="w-3 h-3 bg-green-400 rounded-full ai-brain"></div>
+                    <span id="aiStatusText" class="text-blue-200 text-sm font-semibold">AI آماده</span>
+                </div>
+                <div class="flex items-center space-x-1 space-x-reverse">
+                    <div id="learningIndicator" class="w-4 h-4 text-yellow-400 learning-indicator hidden">🧠</div>
+                    <span id="aiLevel" class="text-xs text-purple-300">سطح: پیشرفته</span>
+                </div>
+            </div>
+            <div class="mt-2 bg-gray-800 rounded-lg h-1">
+                <div id="aiProgress" class="bg-gradient-to-r from-green-400 to-blue-500 h-1 rounded-lg transition-all duration-1000" style="width: 85%"></div>
+            </div>
+        </div>
+        
+        <div class="display rounded-2xl p-6 mb-6 text-right">
+            <div id="history" class="text-gray-400 text-sm h-6 overflow-hidden"></div>
+            <div id="display" class="text-white text-3xl font-bold mt-2 min-h-[2.5rem] flex items-center justify-end">0</div>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-3 mb-4">
+            <button onclick="memoryStore()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">MS</button>
+            <button onclick="memoryRecall()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">MR</button>
+            <button onclick="memoryClear()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">MC</button>
+            <button onclick="memoryAdd()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">M+</button>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-3 mb-4">
+            <button onclick="scientificFunction('sin')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">sin</button>
+            <button onclick="scientificFunction('cos')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">cos</button>
+            <button onclick="scientificFunction('tan')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">tan</button>
+            <button onclick="scientificFunction('log')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">log</button>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-3 mb-4">
+            <button onclick="scientificFunction('sqrt')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">√</button>
+            <button onclick="scientificFunction('square')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">x²</button>
+            <button onclick="scientificFunction('power')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">xʸ</button>
+            <button onclick="scientificFunction('factorial')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">n!</button>
+        </div>
+        
+        <div class="grid grid-cols-4 gap-3">
+            <button onclick="clearAll()" class="calculator-button clear-btn text-white font-bold py-4 rounded-xl">C</button>
+            <button onclick="clearEntry()" class="calculator-button clear-btn text-white font-bold py-4 rounded-xl">CE</button>
+            <button onclick="backspace()" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl">⌫</button>
+            <button onclick="inputOperator('/')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">÷</button>
+            
+            <button onclick="inputNumber('7')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">7</button>
+            <button onclick="inputNumber('8')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">8</button>
+            <button onclick="inputNumber('9')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">9</button>
+            <button onclick="inputOperator('*')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">×</button>
+            
+            <button onclick="inputNumber('4')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">4</button>
+            <button onclick="inputNumber('5')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">5</button>
+            <button onclick="inputNumber('6')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">6</button>
+            <button onclick="inputOperator('-')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">−</button>
+            
+            <button onclick="inputNumber('1')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">1</button>
+            <button onclick="inputNumber('2')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">2</button>
+            <button onclick="inputNumber('3')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">3</button>
+            <button onclick="inputOperator('+')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">+</button>
+            
+            <button onclick="toggleSign()" class="calculator-button number-btn text-white font-bold py-4 rounded-xl">±</button>
+            <button onclick="inputNumber('0')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">0</button>
+            <button onclick="inputDecimal()" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">.</button>
+            <button onclick="calculate()" class="calculator-button equals-btn text-white font-bold py-4 rounded-xl text-xl">=</button>
+        </div>
+        
+        <div class="mt-6 flex bg-gray-700 rounded-xl p-1">
+            <button onclick="switchTab('calculator')" id="calcTab" class="flex-1 py-2 px-4 rounded-lg bg-blue-600 text-white font-semibold text-sm transition-all">ماشین حساب</button>
+            <button onclick="switchTab('converter')" id="convTab" class="flex-1 py-2 px-4 rounded-lg text-gray-300 font-semibold text-sm transition-all hover:text-white">تبدیل واحد</button>
+            <button onclick="switchTab('currency')" id="currTab" class="flex-1 py-2 px-4 rounded-lg text-gray-300 font-semibold text-sm transition-all hover:text-white">نرخ ارز</button>
+            <button onclick="switchTab('ai')" id="aiTabBtn" class="flex-1 py-2 px-4 rounded-lg text-gray-300 font-semibold text-sm transition-all hover:text-white">🧠 AI پیشرفته</button>
+        </div>
+
+        <div id="calculatorTab" class="mt-4 bg-gray-700 rounded-xl p-4">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-white font-semibold">تاریخچه محاسبات</h3>
+                <button onclick="clearHistory()" class="text-red-400 hover:text-red-300 text-sm">پاک کردن</button>
+            </div>
+            <div id="historyList" class="text-gray-300 text-sm max-h-32 overflow-y-auto space-y-1">
+                <div class="text-gray-500 text-center py-2">هیچ محاسبه‌ای انجام نشده</div>
+            </div>
+        </div>
+
+        <div id="converterTab" class="mt-4 bg-gray-700 rounded-xl p-4 hidden">
+            <h3 class="text-white font-semibold mb-4">تبدیل واحدها</h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="text-gray-300 text-sm block mb-2">نوع تبدیل:</label>
+                    <select id="conversionType" onchange="updateConversionUnits()" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                        <option value="length">طول</option>
+                        <option value="weight">وزن</option>
+                        <option value="temperature">دما</option>
+                        <option value="area">مساحت</option>
+                        <option value="volume">حجم</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-300 text-sm block mb-2">از:</label>
+                        <select id="fromUnit" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-gray-300 text-sm block mb-2">به:</label>
+                        <select id="toUnit" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="text-gray-300 text-sm block mb-2">مقدار:</label>
+                    <input type="number" id="conversionInput" placeholder="عدد را وارد کنید" 
+                                class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500" 
+                                oninput="performConversion()">
+                </div>
+                
+                <div id="conversionResult" class="bg-gray-600 rounded-lg p-4 text-center">
+                    <span class="text-gray-400">نتیجه اینجا نمایش داده می‌شود</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="currencyTab" class="mt-4 bg-gray-700 rounded-xl p-4 hidden">
+            <h3 class="text-white font-semibold mb-4">تبدیل ارز</h3>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-gray-300 text-sm block mb-2">از ارز:</label>
+                        <select id="fromCurrency" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                            <option value="USD">دلار آمریکا (USD)</option>
+                            <option value="EUR">یورو (EUR)</option>
+                            <option value="IRR" selected>ریال ایران (IRR)</option>
+                            <option value="GBP">پوند انگلیس (GBP)</option>
+                            <option value="JPY">ین ژاپن (JPY)</option>
+                            <option value="CAD">دلار کانادا (CAD)</option>
+                            <option value="AUD">دلار استرالیا (AUD)</option>
+                            <option value="CHF">فرانک سوئیس (CHF)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-gray-300 text-sm block mb-2">به ارز:</label>
+                        <select id="toCurrency" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                            <option value="USD" selected>دلار آمریکا (USD)</option>
+                            <option value="EUR">یورو (EUR)</option>
+                            <option value="IRR">ریال ایران (IRR)</option>
+                            <option value="GBP">پوند انگلیس (GBP)</option>
+                            <option value="JPY">ین ژاپن (JPY)</option>
+                            <option value="CAD">دلار کانادا (CAD)</option>
+                            <option value="AUD">دلار استرالیا (AUD)</option>
+                            <option value="CHF">فرانک سوئیس (CHF)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="text-gray-300 text-sm block mb-2">مقدار:</label>
+                    <input type="number" id="currencyInput" placeholder="مقدار ارز را وارد کنید" 
+                                class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500" 
+                                oninput="convertCurrency()">
+                </div>
+                
+                <button onclick="convertCurrency()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all">
+                    تبدیل ارز
+                </button>
+                
+                <div id="currencyResult" class="bg-gray-600 rounded-lg p-4 text-center">
+                    <span class="text-gray-400">نتیجه تبدیل اینجا نمایش داده می‌شود</span>
+                </div>
+                
+                <div class="text-xs text-gray-400 text-center">
+                    * نرخ‌های ارز تقریبی و برای مقاصد آموزشی است
+                </div>
+            </div>
+        </div>
+
+        <div id="aiTab" class="mt-4 bg-gray-700 rounded-xl p-4 hidden">
+            <h3 class="text-white font-semibold mb-4 flex items-center">
+                🧠 دستیار هوشمند پیشرفته
+                <span id="aiModeIndicator" class="ml-2 text-xs bg-purple-600 px-2 py-1 rounded-full">حالت عمیق</span>
+            </h3>
+            
+            <div class="space-y-4">
+                <div class="bg-gradient-to-r from-purple-900 to-blue-900 rounded-lg p-4 border border-purple-500">
+                    <h4 class="text-white font-semibold mb-3 flex items-center">
+                        ⚡ قابلیت‌های هوش مصنوعی
+                    </h4>
+                    <div class="grid grid-cols-2 gap-2 text-xs">
+                        <div class="flex items-center text-green-300">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            یادگیری عمیق
+                        </div>
+                        <div class="flex items-center text-green-300">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            پردازش زبان طبیعی
+                        </div>
+                        <div class="flex items-center text-green-300">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            تحلیل پیچیده
+                        </div>
+                        <div class="flex items-center text-green-300">
+                            <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
+                            تشخیص الگو
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-lg p-4 border border-indigo-500">
+                    <h4 class="text-white font-semibold mb-3 flex items-center">
+                        🎤 کنترل چندرسانه‌ای
+                        <span id="voiceStatus" class="ml-2 text-xs bg-gray-600 px-2 py-1 rounded-full">آماده</span>
+                    </h4>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="startAdvancedVoice()" id="advancedVoiceBtn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center">
+                            🎙️ صوت پیشرفته
+                        </button>
+                        <button onclick="toggleAdvancedSpeech()" id="advancedSpeechBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center">
+                            🔊 پاسخ صوتی
+                        </button>
+                        <button onclick="activateImageAnalysis()" id="imageAnalysisBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center">
+                            📷 تحلیل تصویر
+                        </button>
+                    </div>
+                    
+                    <div id="voiceWave" class="mt-3 flex justify-center space-x-1 space-x-reverse hidden">
+                        <div class="w-1 h-4 bg-blue-400 rounded voice-wave" style="animation-delay: 0s"></div>
+                        <div class="w-1 h-6 bg-blue-400 rounded voice-wave" style="animation-delay: 0.1s"></div>
+                        <div class="w-1 h-8 bg-blue-400 rounded voice-wave" style="animation-delay: 0.2s"></div>
+                        <div class="w-1 h-6 bg-blue-400 rounded voice-wave" style="animation-delay: 0.3s"></div>
+                        <div class="w-1 h-4 bg-blue-400 rounded voice-wave" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-yellow-900 to-orange-900 rounded-lg p-4 border border-yellow-500">
+                    <h4 class="text-white font-semibold mb-3 flex items-center">
+                        🧠 حالت یادگیری
+                        <div id="learningStatus" class="ml-2 text-xs bg-yellow-600 px-2 py-1 rounded-full">فعال</div>
+                    </h4>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="toggleLearningMode()" id="learningModeBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 rounded-lg transition-all text-sm">
+                            🎯 یادگیری تطبیقی
+                        </button>
+                        <button onclick="showLearningStats()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 rounded-lg transition-all text-sm">
+                            📊 آمار یادگیری
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-300 text-sm block mb-2 flex items-center">
+                        سوال پیچیده یا داده خود را وارد کنید:
+                        <span id="inputAnalysis" class="ml-2 text-xs text-purple-300"></span>
+                    </label>
+                    <textarea id="advancedAiInput" placeholder="مثال: تحلیل داده‌های فروش، حل معادلات پیچیده، پیش‌بینی روند، تحلیل آماری..." 
+                                 class="w-full bg-gray-800 text-white rounded-lg p-3 border-2 border-gray-500 focus:border-purple-500 h-32 resize-none focus:outline-none transition-all"
+                                 oninput="analyzeInput(this.value)"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-gray-300 text-xs block mb-1">نوع تحلیل:</label>
+                        <select id="analysisType" class="w-full bg-gray-600 text-white rounded-lg p-2 text-sm border border-gray-500">
+                            <option value="deep">تحلیل عمیق</option>
+                            <option value="statistical">تحلیل آماری</option>
+                            <option value="predictive">پیش‌بینی</option>
+                            <option value="pattern">تشخیص الگو</option>
+                            <option value="optimization">بهینه‌سازی</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-gray-300 text-xs block mb-1">سطح پیچیدگی:</label>
+                        <select id="complexityLevel" class="w-full bg-gray-600 text-white rounded-lg p-2 text-sm border border-gray-500">
+                            <option value="basic">پایه</option>
+                            <option value="intermediate">متوسط</option>
+                            <option value="advanced" selected>پیشرفته</option>
+                            <option value="expert">تخصصی</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="processAdvancedAI()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
+                        🚀 پردازش هوشمند
+                    </button>
+                    <button onclick="clearAdvancedAI()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center">
+                        🗑️ پاک کردن
+                    </button>
+                </div>
+                
+                <div id="advancedAiResult" class="bg-gray-800 rounded-lg p-4 min-h-[200px] border border-gray-600">
+                    <div class="text-gray-400 text-center">
+                        <div class="mb-4">
+                            <div class="w-16 h-16 mx-auto mb-3 ai-brain rounded-full flex items-center justify-center text-2xl">🧠</div>
+                            <div class="text-lg font-semibold text-purple-300">هوش مصنوعی پیشرفته آماده است</div>
+                        </div>
+                        <div class="text-sm space-y-3 text-right">
+                            <div class="bg-gradient-to-r from-purple-800 to-blue-800 p-3 rounded-lg">
+                                <div class="font-semibold text-purple-200 mb-2">💡 قابلیت‌های پیشرفته:</div>
+                                <div class="text-xs space-y-1 text-purple-100">
+                                    <div>• تحلیل داده‌های پیچیده و چندبعدی</div>
+                                    <div>• حل معادلات دیفرانسیل و انتگرال</div>
+                                    <div>• پیش‌بینی روندها با یادگیری ماشین</div>
+                                    <div>• بهینه‌سازی و تحلیل عملکرد</div>
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-r from-green-800 to-teal-800 p-3 rounded-lg">
+                                <div class="font-semibold text-green-200 mb-2">🎯 نمونه کاربردها:</div>
+                                <div class="text-xs space-y-1 text-green-100">
+                                    <div>• "تحلیل فروش ماهانه: 1200, 1350, 1100, 1450"</div>
+                                    <div>• "حل معادله: d²y/dx² + 3dy/dx + 2y = 0"</div>
+                                    <div>• "بهینه‌سازی تابع: f(x) = x² - 4x + 3"</div>
+                                    <div>• "پیش‌بینی قیمت بر اساس داده‌های تاریخی"</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
+                    <h5 class="text-gray-300 font-semibold mb-2 text-sm">📈 عملکرد AI:</h5>
+                    <div class="grid grid-cols-3 gap-3 text-xs">
+                        <div class="text-center">
+                            <div class="text-green-400 font-bold" id="accuracyRate">98.5%</div>
+                            <div class="text-gray-400">دقت</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-blue-400 font-bold" id="processingSpeed">0.3s</div>
+                            <div class="text-gray-400">سرعت</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-purple-400 font-bold" id="learningProgress">847</div>
+                            <div class="text-gray-400">تعاملات</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-900 bg-opacity-30 rounded-lg p-3 border border-indigo-500">
+                    <h5 class="text-indigo-300 font-semibold mb-2 text-sm">🎯 دستورات پیشرفته:</h5>
+                    <div class="text-xs text-indigo-200 space-y-1 max-h-24 overflow-y-auto">
+                        <div>• "Analyze data: [1,2,3,4,5] with trend prediction"</div>
+                        <div>• "Solve differential equation: dy/dx = 2x + 1"</div>
+                        <div>• "Optimize function f(x,y) = x² + y² subject to x+y=1"</div>
+                        <div>• "Statistical analysis of dataset with correlation"</div>
+                        <div>• "Machine learning prediction based on historical data"</div>
+                        <div>• "Complex number operations and transformations"</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let historyDisplay = document.getElementById('history');
+        let historyList = document.getElementById('historyList');
+        
+        let currentInput = '0';
+        let previousInput = '';
+        let operator = '';
+        let waitingForOperand = false;
+        let memory = 0;
+        let history = [];
+        
+        // Data for Unit Converter
+        const conversionUnits = {
+            length: {
+                meter: { name: 'متر', toBase: 1 },
+                kilometer: { name: 'کیلومتر', toBase: 1000 },
+                centimeter: { name: 'سانتی‌متر', toBase: 0.01 },
+                millimeter: { name: 'میلی‌متر', toBase: 0.001 },
+                mile: { name: 'مایل', toBase: 1609.34 },
+                yard: { name: 'یارد', toBase: 0.9144 },
+                foot: { name: 'فوت', toBase: 0.3048 },
+                inch: { name: 'اینچ', toBase: 0.0254 }
+            },
+            weight: {
+                kilogram: { name: 'کیلوگرم', toBase: 1 },
+                gram: { name: 'گرم', toBase: 0.001 },
+                milligram: { name: 'میلی‌گرم', toBase: 0.000001 },
+                ton: { name: 'تن', toBase: 1000 },
+                pound: { name: 'پوند', toBase: 0.453592 },
+                ounce: { name: 'اونس', toBase: 0.0283495 }
+            },
+            temperature: {
+                celsius: { name: 'سلسیوس', toBase: temp => temp },
+                fahrenheit: { name: 'فارنهایت', toBase: temp => (temp - 32) * 5/9 },
+                kelvin: { name: 'کلوین', toBase: temp => temp - 273.15 }
+            },
+            area: {
+                squareMeter: { name: 'متر مربع', toBase: 1 },
+                squareKilometer: { name: 'کیلومتر مربع', toBase: 1e6 },
+                hectare: { name: 'هکتار', toBase: 1e4 },
+                acre: { name: 'جریب', toBase: 4046.86 }
+            },
+            volume: {
+                liter: { name: 'لیتر', toBase: 1 },
+                cubicMeter: { name: 'متر مکعب', toBase: 1000 },
+                milliliter: { name: 'میلی‌لیتر', toBase: 0.001 },
+                gallon: { name: 'گالون', toBase: 3.78541 }
+            }
+        };
+
+        // Dummy data for Currency Converter
+        const exchangeRates = {
+            USD: { IRR: 42000, EUR: 0.93, GBP: 0.79, JPY: 157.5, CAD: 1.37, AUD: 1.5, CHF: 0.9 },
+            EUR: { IRR: 45000, USD: 1.07, GBP: 0.85, JPY: 169.5, CAD: 1.47, AUD: 1.6, CHF: 0.96 },
+            IRR: { USD: 0.000024, EUR: 0.000022, GBP: 0.000019, JPY: 0.0037, CAD: 0.000033, AUD: 0.000036, CHF: 0.000021 },
+            GBP: { IRR: 53000, USD: 1.26, EUR: 1.17, JPY: 199.5, CAD: 1.72, AUD: 1.87, CHF: 1.14 },
+            JPY: { IRR: 265, USD: 0.0063, EUR: 0.0059, GBP: 0.005, CAD: 0.0087, AUD: 0.0095, CHF: 0.0057 },
+            CAD: { IRR: 30500, USD: 0.73, EUR: 0.68, GBP: 0.58, JPY: 114.5, AUD: 1.1, CHF: 0.65 },
+            AUD: { IRR: 28000, USD: 0.67, EUR: 0.62, GBP: 0.53, JPY: 105, CAD: 0.91, CHF: 0.59 },
+            CHF: { IRR: 47000, USD: 1.11, EUR: 1.04, GBP: 0.88, JPY: 175.5, CAD: 1.53, AUD: 1.68 }
+        };
+        
+        // Advanced AI Variables
+        let aiLearningMode = true;
+        let aiInteractions = 847;
+        let aiAccuracy = 98.5;
+        let aiProcessingSpeed = 0.3;
+        let userPreferences = {};
+        let learningData = [];
+        let isAdvancedListening = false;
+        let advancedSpeechEnabled = true;
+        let lastAdvancedResponse = '';
+        let aiPersonality = 'analytical'; // analytical, creative, technical
+        
+        function updateDisplay() {
+            display.textContent = currentInput;
+        }
+        
+        function updateHistory(expression) {
+            historyDisplay.textContent = expression;
+        }
+        
+        function addToHistory(calculation) {
+            history.unshift(calculation);
+            if (history.length > 10) history.pop();
+            
+            historyList.innerHTML = '';
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="text-gray-500 text-center py-2">هیچ محاسبه‌ای انجام نشده</div>';
+            } else {
+                history.forEach(calc => {
+                    const div = document.createElement('div');
+                    div.className = 'py-1 border-b border-gray-600 last:border-b-0';
+                    div.innerHTML = `<div class="text-right">${calc.expression} = ${calc.result}</div>`;
+                    historyList.appendChild(div);
+                });
+            }
+        }
+        
+        function inputNumber(num) {
+            if (waitingForOperand) {
+                currentInput = num;
+                waitingForOperand = false;
+            } else {
+                currentInput = currentInput === '0' ? num : currentInput + num;
+            }
+            updateDisplay();
+        }
+        
+        function inputOperator(op) {
+            if (waitingForOperand) {
+                operator = op;
+                updateHistory(`${previousInput} ${op}`);
+                return;
+            }
+            if (previousInput !== '') {
+                calculate();
+            }
+            operator = op;
+            previousInput = currentInput;
+            waitingForOperand = true;
+            updateHistory(`${previousInput} ${op}`);
+        }
+        
+        function inputDecimal() {
+            if (waitingForOperand) {
+                currentInput = '0.';
+                waitingForOperand = false;
+            } else if (!currentInput.includes('.')) {
+                currentInput += '.';
+            }
+            updateDisplay();
+        }
+        
+        function calculate() {
+            if (previousInput === '' || operator === '' || waitingForOperand) {
+                return;
+            }
+            
+            const num1 = parseFloat(previousInput);
+            const num2 = parseFloat(currentInput);
+            let result = 0;
+            let expression = `${previousInput} ${operator} ${currentInput}`;
+            
+            try {
+                switch (operator) {
+                    case '+':
+                        result = num1 + num2;
+                        break;
+                    case '-':
+                        result = num1 - num2;
+                        break;
+                    case '*':
+                        result = num1 * num2;
+                        break;
+                    case '/':
+                        if (num2 === 0) {
+                            throw new Error("Cannot divide by zero");
+                        }
+                        result = num1 / num2;
+                        break;
+                    default:
+                        throw new Error("Invalid operator");
+                }
+                
+                // Add calculation to history
+                addToHistory({ expression: expression, result: result });
+                
+                currentInput = result.toString();
+                previousInput = '';
+                operator = '';
+                waitingForOperand = false;
+                updateDisplay();
+                updateHistory('');
+                
+            } catch (error) {
+                currentInput = 'Error';
+                previousInput = '';
+                operator = '';
+                waitingForOperand = false;
+                updateDisplay();
+                updateHistory('');
+            }
+        }
+        
+        function clearAll() {
+            currentInput = '0';
+            previousInput = '';
+            operator = '';
+            waitingForOperand = false;
+            updateDisplay();
+            updateHistory('');
+        }
+        
+        function clearEntry() {
+            currentInput = '0';
+            updateDisplay();
+        }
+
+        function backspace() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.slice(0, -1);
+            } else {
+                currentInput = '0';
+            }
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            updateDisplay();
+        }
+
+        // Memory Functions
+        function memoryStore() {
+            memory = parseFloat(currentInput);
+        }
+
+        function memoryRecall() {
+            currentInput = memory.toString();
+            updateDisplay();
+        }
+
+        function memoryClear() {
+            memory = 0;
+        }
+
+        function memoryAdd() {
+            memory += parseFloat(currentInput);
+        }
+
+        // Scientific Functions
+        function scientificFunction(func) {
+            const num = parseFloat(currentInput);
+            let result = 0;
+            let expression = `${func}(${currentInput})`;
+
+            try {
+                switch (func) {
+                    case 'sin':
+                        result = Math.sin(num * Math.PI / 180); // Convert degrees to radians
+                        break;
+                    case 'cos':
+                        result = Math.cos(num * Math.PI / 180);
+                        break;
+                    case 'tan':
+                        result = Math.tan(num * Math.PI / 180);
+                        break;
+                    case 'log':
+                        if (num <= 0) throw new Error("Log of non-positive number");
+                        result = Math.log10(num);
+                        break;
+                    case 'sqrt':
+                        if (num < 0) throw new Error("Square root of negative number");
+                        result = Math.sqrt(num);
+                        expression = `√(${currentInput})`;
+                        break;
+                    case 'square':
+                        result = num * num;
+                        expression = `(${currentInput})²`;
+                        break;
+                    case 'power':
+                        // Waiting for a second operand for power
+                        operator = '^';
+                        previousInput = currentInput;
+                        waitingForOperand = true;
+                        updateHistory(`${previousInput} ^`);
+                        return;
+                    case 'factorial':
+                        if (num < 0) throw new Error("Factorial of negative number");
+                        if (num > 20) throw new Error("Number too large for factorial");
+                        result = 1;
+                        for (let i = 2; i <= num; i++) {
+                            result *= i;
+                        }
+                        expression = `${currentInput}!`;
+                        break;
+                }
+                
+                // For 'power' function
+                if (operator === '^') {
+                    const num1 = parseFloat(previousInput);
+                    const num2 = parseFloat(currentInput);
+                    result = Math.pow(num1, num2);
+                    expression = `${previousInput} ^ ${currentInput}`;
+                    operator = '';
+                    previousInput = '';
+                }
+
+                // Limit decimal places
+                result = parseFloat(result.toFixed(10));
+
+                addToHistory({ expression: expression, result: result });
+                currentInput = result.toString();
+                updateDisplay();
+                updateHistory('');
+
+            } catch (error) {
+                currentInput = 'Error';
+                updateDisplay();
+                updateHistory('');
+            }
+        }
+        
+        function clearHistory() {
+            history = [];
+            addToHistory({}); // to refresh the list
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            const tabs = ['calculatorTab', 'converterTab', 'currencyTab', 'aiTab'];
+            tabs.forEach(tab => {
+                document.getElementById(tab).classList.add('hidden');
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+
+            const tabButtons = ['calcTab', 'convTab', 'currTab', 'aiTabBtn'];
+            tabButtons.forEach(btnId => {
+                document.getElementById(btnId).classList.remove('bg-blue-600', 'text-white', 'hover:text-white');
+                document.getElementById(btnId).classList.add('text-gray-300');
+            });
+            document.getElementById(tabId.replace('Tab', 'Tab') + 'Btn').classList.add('bg-blue-600', 'text-white');
+            
+            // Special handling for currency tab button
+            if (tabId === 'currencyTab') {
+                document.getElementById('currTab').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('currTab').classList.remove('text-gray-300');
+            } else if (tabId === 'converterTab') {
+                document.getElementById('convTab').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('convTab').classList.remove('text-gray-300');
+            } else if (tabId === 'calculatorTab') {
+                document.getElementById('calcTab').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('calcTab').classList.remove('text-gray-300');
+            } else if (tabId === 'aiTab') {
+                document.getElementById('aiTabBtn').classList.add('bg-blue-600', 'text-white');
+                document.getElementById('aiTabBtn').classList.remove('text-gray-300');
+            }
+        }
+
+        // Unit Converter Logic
+        function updateConversionUnits() {
+            const type = document.getElementById('conversionType').value;
+            const fromUnitSelect = document.getElementById('fromUnit');
+            const toUnitSelect = document.getElementById('toUnit');
+            fromUnitSelect.innerHTML = '';
+            toUnitSelect.innerHTML = '';
+            
+            const units = Object.keys(conversionUnits[type]);
+            units.forEach(unitKey => {
+                const option = document.createElement('option');
+                option.value = unitKey;
+                option.textContent = conversionUnits[type][unitKey].name;
+                fromUnitSelect.appendChild(option);
+            });
+            units.forEach(unitKey => {
+                const option = document.createElement('option');
+                option.value = unitKey;
+                option.textContent = conversionUnits[type][unitKey].name;
+                toUnitSelect.appendChild(option);
+            });
+            performConversion();
+        }
+
+        function performConversion() {
+            const type = document.getElementById('conversionType').value;
+            const fromUnit = document.getElementById('fromUnit').value;
+            const toUnit = document.getElementById('toUnit').value;
+            const value = parseFloat(document.getElementById('conversionInput').value);
+            const resultDiv = document.getElementById('conversionResult');
+
+            if (isNaN(value)) {
+                resultDiv.innerHTML = '<span class="text-gray-400">لطفاً یک عدد معتبر وارد کنید.</span>';
+                return;
+            }
+
+            let baseValue;
+            if (type === 'temperature') {
+                if (fromUnit === 'celsius') baseValue = value;
+                else if (fromUnit === 'fahrenheit') baseValue = (value - 32) * 5/9;
+                else if (fromUnit === 'kelvin') baseValue = value - 273.15;
+            } else {
+                baseValue = value * conversionUnits[type][fromUnit].toBase;
+            }
+
+            let result;
+            if (type === 'temperature') {
+                if (toUnit === 'celsius') result = baseValue;
+                else if (toUnit === 'fahrenheit') result = (baseValue * 9/5) + 32;
+                else if (toUnit === 'kelvin') result = baseValue + 273.15;
+            } else {
+                result = baseValue / conversionUnits[type][toUnit].toBase;
+            }
+            
+            resultDiv.innerHTML = `<span class="text-white font-bold">${result.toFixed(6)}</span> <span class="text-gray-300">${conversionUnits[type][toUnit].name}</span>`;
+        }
+
+        // Currency Converter Logic
+        function convertCurrency() {
+            const from = document.getElementById('fromCurrency').value;
+            const to = document.getElementById('toCurrency').value;
+            const amount = parseFloat(document.getElementById('currencyInput').value);
+            const resultDiv = document.getElementById('currencyResult');
+
+            if (isNaN(amount) || amount <= 0) {
+                resultDiv.innerHTML = '<span class="text-gray-400">لطفاً یک مقدار معتبر وارد کنید.</span>';
+                return;
+            }
+            
+            if (from === to) {
+                resultDiv.innerHTML = `<span class="text-white font-bold">${amount}</span> <span class="text-gray-300">${to}</span>`;
+                return;
+            }
+
+            if (exchangeRates[from] && exchangeRates[from][to]) {
+                const rate = exchangeRates[from][to];
+                const result = amount * rate;
+                resultDiv.innerHTML = `<span class="text-white font-bold">${result.toFixed(4)}</span> <span class="text-gray-300">${to}</span>`;
+            } else {
+                resultDiv.innerHTML = '<span class="text-red-400">نرخ تبدیل موجود نیست.</span>';
+            }
+        }
+        
+        // Advanced AI Functions (Dummy Implementations)
+        function analyzeInput(text) {
+            const analysisSpan = document.getElementById('inputAnalysis');
+            if (text.length > 5) {
+                analysisSpan.textContent = '... در حال تحلیل';
+                // Simulate an AI analysis process
+                setTimeout(() => {
+                    const randomType = ['ریاضی', 'آماری', 'منطقی'][Math.floor(Math.random() * 3)];
+                    analysisSpan.textContent = `نوع: ${randomType}`;
+                }, 500);
+            } else {
+                analysisSpan.textContent = '';
+            }
+        }
+
+        function processAdvancedAI() {
+            const input = document.getElementById('advancedAiInput').value;
+            const type = document.getElementById('analysisType').value;
+            const resultDiv = document.getElementById('advancedAiResult');
+            const aiStatusText = document.getElementById('aiStatusText');
+            const aiStatusIcon = document.getElementById('aiStatusIcon');
+            const aiProgress = document.getElementById('aiProgress');
+
+            if (input.trim() === '') {
+                resultDiv.innerHTML = `<div class="text-center text-red-400">لطفاً یک سوال یا داده وارد کنید.</div>`;
+                return;
+            }
+            
+            // Simulate AI processing
+            aiStatusText.textContent = 'در حال پردازش...';
+            aiStatusIcon.classList.add('ai-thinking');
+            aiProgress.style.width = '10%';
+            
+            setTimeout(() => {
+                aiProgress.style.width = '70%';
+            }, 500);
+
+            setTimeout(() => {
+                aiProgress.style.width = '100%';
+            }, 1000);
+
+            setTimeout(() => {
+                // Dummy response based on input
+                let response = `تحلیل شما (${type}):\n\n`;
+                if (input.includes('فروش')) {
+                    const data = input.match(/\d+/g).map(Number);
+                    const sum = data.reduce((a, b) => a + b, 0);
+                    const avg = sum / data.length;
+                    response += `داده‌های فروش: ${data.join(', ')}\n`;
+                    response += `میانگین فروش: ${avg.toFixed(2)}\n`;
+                    response += `مجموع فروش: ${sum}\n`;
+                    response += `**پیش‌بینی**: بر اساس روند کنونی، فروش ماه آینده با ${aiAccuracy}% دقت، حدود ${(avg * 1.1).toFixed(2)} خواهد بود.`;
+                } else if (input.includes('معادله')) {
+                    response += `**حل معادله**: معادله شما با روش‌های پیشرفته حل شده است. جواب عمومی و خاص معادله به شرح زیر است:...\n`;
+                    response += `**جزئیات**: برای حل این معادله از الگوریتم‌های یادگیری تقویتی استفاده شده است.`;
+                } else {
+                    response += `**نتیجه تحلیل پیشرفته**: درخواست شما با موفقیت پردازش شد. با توجه به داده‌های ورودی، الگوی اصلی به شرح زیر شناسایی شد:...\n`;
+                    response += `**توصیه**: برای بهینه‌سازی بیشتر، داده‌های دقیق‌تری ارائه دهید.`;
+                }
+                
+                resultDiv.innerHTML = `<div class="ai-response p-4 rounded-lg text-white whitespace-pre-wrap">${response}</div>`;
+                
+                aiStatusText.textContent = 'AI آماده';
+                aiStatusIcon.classList.remove('ai-thinking');
+                aiProgress.style.width = '85%';
+                aiInteractions++;
+                document.getElementById('learningProgress').textContent = aiInteractions;
+
+                // Speech synthesis
+                if (advancedSpeechEnabled) {
+                    const synth = window.speechSynthesis;
+                    if (synth) {
+                        const utterance = new SpeechSynthesisUtterance(response);
+                        utterance.lang = 'fa-IR';
+                        synth.speak(utterance);
+                    }
+                }
+            }, 1500); // Simulate a 1.5 second processing time
+        }
+
+        function clearAdvancedAI() {
+            document.getElementById('advancedAiInput').value = '';
+            document.getElementById('advancedAiResult').innerHTML = `
+                <div class="text-gray-400 text-center">
+                    <div class="mb-4">
+                        <div class="w-16 h-16 mx-auto mb-3 ai-brain rounded-full flex items-center justify-center text-2xl">🧠</div>
+                        <div class="text-lg font-semibold text-purple-300">هوش مصنوعی پیشرفته آماده است</div>
+                    </div>
+                </div>`;
+            document.getElementById('inputAnalysis').textContent = '';
+        }
+        
+        function startAdvancedVoice() {
+            // Dummy implementation
+            const voiceBtn = document.getElementById('advancedVoiceBtn');
+            const voiceStatus = document.getElementById('voiceStatus');
+            const voiceWave = document.getElementById('voiceWave');
+            
+            if (isAdvancedListening) {
+                isAdvancedListening = false;
+                voiceBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                voiceBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+                voiceStatus.textContent = 'آماده';
+                voiceStatus.classList.remove('bg-green-600', 'ai-thinking');
+                voiceStatus.classList.add('bg-gray-600');
+                voiceWave.classList.add('hidden');
+            } else {
+                isAdvancedListening = true;
+                voiceBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                voiceBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                voiceStatus.textContent = 'در حال گوش دادن...';
+                voiceStatus.classList.remove('bg-gray-600');
+                voiceStatus.classList.add('bg-green-600', 'ai-thinking');
+                voiceWave.classList.remove('hidden');
+                
+                // Simulate receiving voice input after a few seconds
+                setTimeout(() => {
+                    document.getElementById('advancedAiInput').value = 'تحلیل داده‌های فروش ماهانه: 1200, 1350, 1100, 1450';
+                    startAdvancedVoice(); // Stop listening
+                }, 3000);
+            }
+        }
+        
+        function toggleAdvancedSpeech() {
+            const speechBtn = document.getElementById('advancedSpeechBtn');
+            advancedSpeechEnabled = !advancedSpeechEnabled;
+            if (advancedSpeechEnabled) {
+                speechBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                speechBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+            } else {
+                speechBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                speechBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+            }
+        }
+        
+        function activateImageAnalysis() {
+            // Dummy function - In a real app, this would open a file picker or camera
+            alert('قابلیت تحلیل تصویر فعال شد. لطفاً یک تصویر از یک معادله یا داده‌های ریاضی انتخاب کنید.');
+        }
+
+        function toggleLearningMode() {
+            const learningBtn = document.getElementById('learningModeBtn');
+            const learningStatus = document.getElementById('learningStatus');
+            aiLearningMode = !aiLearningMode;
+            if (aiLearningMode) {
+                learningBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                learningBtn.classList.add('bg-yellow-600', 'hover:bg-yellow-700');
+                learningStatus.textContent = 'فعال';
+                learningStatus.classList.remove('bg-gray-600');
+                learningStatus.classList.add('bg-yellow-600');
+            } else {
+                learningBtn.classList.remove('bg-yellow-600', 'hover:bg-yellow-700');
+                learningBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                learningStatus.textContent = 'غیرفعال';
+                learningStatus.classList.remove('bg-yellow-600');
+                learningStatus.classList.add('bg-gray-600');
+            }
+        }
+
+        function showLearningStats() {
+            alert(`آمار یادگیری فعلی:\n\nتعاملات پردازش شده: ${aiInteractions}\nدقت تخمینی: ${aiAccuracy}%\nسرعت پردازش متوسط: ${aiProcessingSpeed}s`);
+        }
+        
+        // Initial setup
+        document.addEventListener('DOMContentLoaded', () => {
+            updateConversionUnits();
+            switchTab('calculatorTab');
+        });
+
+    </script>
+</body>
+</html>
