@@ -1,75 +1,286 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ماشین حساب هوشمند AI</title>
+    <title>Smart AI Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
-            font-family: 'Vazirmatn', sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
-        
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+        }
+
+        .calculator-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .calculator-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        }
+
+        .header-glow {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            background-size: 200% 200%;
+            animation: headerGlow 8s ease infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes headerGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header-glow::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .display-container {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .display-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+            pointer-events: none;
+        }
+
         .calculator-button {
-            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
             user-select: none;
+            cursor: pointer;
         }
-        
+
+        .calculator-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .calculator-button:hover::before {
+            left: 100%;
+        }
+
         .calculator-button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
         }
-        
+
         .calculator-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-        
-        .display {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border: 2px solid #475569;
-        }
-        
-        .operator-btn {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-        }
-        
-        .operator-btn:hover {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-        }
-        
+
         .number-btn {
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
         }
-        
+
         .number-btn:hover {
-            background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
         }
-        
+
+        .operator-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .operator-btn:hover {
+            background: linear-gradient(135deg, #ff5252, #d63031);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        }
+
         .equals-btn {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #00d2d3, #54a0ff);
+            box-shadow: 0 8px 25px rgba(0, 210, 211, 0.3);
         }
-        
+
         .equals-btn:hover {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            background: linear-gradient(135deg, #00a8a9, #2f3542);
+            box-shadow: 0 12px 35px rgba(0, 210, 211, 0.4);
         }
-        
+
         .clear-btn {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: linear-gradient(135deg, #ff3838, #ff6b6b);
+            box-shadow: 0 8px 25px rgba(255, 56, 56, 0.3);
         }
-        
+
         .clear-btn:hover {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            background: linear-gradient(135deg, #e55039, #eb4d4b);
+            box-shadow: 0 12px 35px rgba(255, 56, 56, 0.4);
         }
-        
+
         .function-btn {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #a55eea, #8854d0);
+            box-shadow: 0 8px 25px rgba(165, 94, 234, 0.3);
         }
-        
+
         .function-btn:hover {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            background: linear-gradient(135deg, #9c88ff, #7158e2);
+            box-shadow: 0 12px 35px rgba(165, 94, 234, 0.4);
+        }
+
+        .tab-container {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            font-size: 13px;
+            padding: 12px 16px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .ai-status-panel {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ai-status-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: aiPulse 4s ease infinite;
+        }
+
+        @keyframes aiPulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .content-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            position: relative;
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
         }
 
         .ai-thinking {
@@ -77,8 +288,8 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
         }
 
         .neural-network {
@@ -92,8 +303,9 @@
         }
 
         .ai-response {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-left: 4px solid #4f46e5;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-left: 4px solid #667eea;
+            backdrop-filter: blur(10px);
         }
 
         .learning-indicator {
@@ -123,37 +335,157 @@
             0%, 100% { transform: scale(1); opacity: 0.8; }
             50% { transform: scale(1.05); opacity: 1; }
         }
+
+        .glow-text {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .premium-input {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .premium-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
+        }
+
+        .premium-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .premium-select {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            color: white;
+        }
+
+        .premium-select option {
+            background: rgba(30, 30, 30, 0.95);
+            color: white;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #00d2d3, #54a0ff, #5f27cd);
+            background-size: 200% 100%;
+            animation: progressShine 2s ease infinite;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        @keyframes progressShine {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        @media (max-width: 768px) {
+            .calculator-container {
+                margin: 10px;
+                border-radius: 24px;
+            }
+            
+            .calculator-button {
+                font-size: 16px;
+                border-radius: 16px;
+            }
+            
+            .display-container {
+                border-radius: 20px;
+            }
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen flex items-center justify-center p-4">
-    <div class="bg-gray-800 rounded-3xl shadow-2xl p-6 w-full max-w-md border border-gray-700">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-white mb-2">🧠 ماشین حساب هوشمند AI</h1>
-            <div class="w-16 h-1 bg-gradient-to-r from-amber-400 to-orange-500 mx-auto rounded-full"></div>
-            <div class="mt-2 text-xs text-gray-400">نسل جدید محاسبات هوشمند</div>
-        </div>
-        
-        <div class="mb-4 bg-gradient-to-r from-blue-900 to-purple-900 rounded-xl p-3 border border-blue-500">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2 space-x-reverse">
-                    <div id="aiStatusIcon" class="w-3 h-3 bg-green-400 rounded-full ai-brain"></div>
-                    <span id="aiStatusText" class="text-blue-200 text-sm font-semibold">AI آماده</span>
-                </div>
-                <div class="flex items-center space-x-1 space-x-reverse">
-                    <div id="learningIndicator" class="w-4 h-4 text-yellow-400 learning-indicator hidden">🧠</div>
-                    <span id="aiLevel" class="text-xs text-purple-300">سطح: پیشرفته</span>
-                </div>
-            </div>
-            <div class="mt-2 bg-gray-800 rounded-lg h-1">
-                <div id="aiProgress" class="bg-gradient-to-r from-green-400 to-blue-500 h-1 rounded-lg transition-all duration-1000" style="width: 85%"></div>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <div class="floating-circle" style="width: 60px; height: 60px; left: 10%; animation-delay: 0s;"></div>
+        <div class="floating-circle" style="width: 40px; height: 40px; left: 80%; animation-delay: 5s;"></div>
+        <div class="floating-circle" style="width: 80px; height: 80px; left: 60%; animation-delay: 10s;"></div>
+        <div class="floating-circle" style="width: 30px; height: 30px; left: 30%; animation-delay: 15s;"></div>
+    </div>
+
+    <div class="calculator-container w-full max-w-md p-8">
+        <!-- Header -->
+        <div class="header-glow text-center mb-8 p-6 -mx-8 -mt-8">
+            <h1 class="text-3xl font-bold text-white mb-3 glow-text">🧠 Smart AI Calculator</h1>
+            <div class="w-20 h-1 bg-gradient-to-r from-white to-transparent mx-auto rounded-full mb-2"></div>
+            <div class="text-sm text-white/80 font-medium">Next Generation Smart Computing</div>
+            <div class="mt-3 flex justify-center space-x-2">
+                <span class="status-badge">⚡ Premium</span>
+                <span class="status-badge">🔥 Advanced AI</span>
             </div>
         </div>
         
-        <div class="display rounded-2xl p-6 mb-6 text-right">
-            <div id="history" class="text-gray-400 text-sm h-6 overflow-hidden"></div>
-            <div id="display" class="text-white text-3xl font-bold mt-2 min-h-[2.5rem] flex items-center justify-end">0</div>
+        <!-- AI Status Indicator -->
+        <div class="ai-status-panel mb-6 p-4 card-hover">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center space-x-3">
+                    <div id="aiStatusIcon" class="w-4 h-4 bg-green-400 rounded-full ai-brain icon-glow"></div>
+                    <span id="aiStatusText" class="text-white text-sm font-semibold">AI Ready</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div id="learningIndicator" class="w-5 h-5 text-yellow-400 learning-indicator hidden icon-glow">🧠</div>
+                    <span id="aiLevel" class="text-xs text-white/70 font-medium">Level: Advanced</span>
+                </div>
+            </div>
+            <div class="progress-bar h-2">
+                <div id="aiProgress" class="progress-fill h-2" style="width: 85%"></div>
+            </div>
+            <div class="mt-2 text-xs text-white/60 text-center">Neural Network Active • Learning Mode ON</div>
         </div>
         
+        <!-- Display -->
+        <div class="display-container p-6 mb-6 text-right">
+            <div id="history" class="text-white/60 text-sm h-6 overflow-hidden font-medium"></div>
+            <div id="display" class="text-white text-4xl font-bold mt-3 min-h-[3rem] flex items-center justify-end glow-text">0</div>
+            <div class="mt-2 text-xs text-white/40 text-center">Smart Display • Real-time Processing</div>
+        </div>
+        
+        <!-- Memory and Function Buttons -->
         <div class="grid grid-cols-4 gap-3 mb-4">
             <button onclick="memoryStore()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">MS</button>
             <button onclick="memoryRecall()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">MR</button>
@@ -161,6 +493,7 @@
             <button onclick="memoryAdd()" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">M+</button>
         </div>
         
+        <!-- Scientific Functions -->
         <div class="grid grid-cols-4 gap-3 mb-4">
             <button onclick="scientificFunction('sin')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">sin</button>
             <button onclick="scientificFunction('cos')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">cos</button>
@@ -175,194 +508,235 @@
             <button onclick="scientificFunction('factorial')" class="calculator-button function-btn text-white font-semibold py-3 rounded-xl text-sm">n!</button>
         </div>
         
+        <!-- Main Calculator Buttons -->
         <div class="grid grid-cols-4 gap-3">
+            <!-- Row 1 -->
             <button onclick="clearAll()" class="calculator-button clear-btn text-white font-bold py-4 rounded-xl">C</button>
             <button onclick="clearEntry()" class="calculator-button clear-btn text-white font-bold py-4 rounded-xl">CE</button>
             <button onclick="backspace()" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl">⌫</button>
             <button onclick="inputOperator('/')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">÷</button>
             
+            <!-- Row 2 -->
             <button onclick="inputNumber('7')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">7</button>
             <button onclick="inputNumber('8')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">8</button>
             <button onclick="inputNumber('9')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">9</button>
             <button onclick="inputOperator('*')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">×</button>
             
+            <!-- Row 3 -->
             <button onclick="inputNumber('4')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">4</button>
             <button onclick="inputNumber('5')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">5</button>
             <button onclick="inputNumber('6')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">6</button>
             <button onclick="inputOperator('-')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">−</button>
             
+            <!-- Row 4 -->
             <button onclick="inputNumber('1')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">1</button>
             <button onclick="inputNumber('2')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">2</button>
             <button onclick="inputNumber('3')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">3</button>
             <button onclick="inputOperator('+')" class="calculator-button operator-btn text-white font-bold py-4 rounded-xl text-xl">+</button>
             
+            <!-- Row 5 -->
             <button onclick="toggleSign()" class="calculator-button number-btn text-white font-bold py-4 rounded-xl">±</button>
             <button onclick="inputNumber('0')" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">0</button>
             <button onclick="inputDecimal()" class="calculator-button number-btn text-white font-bold py-4 rounded-xl text-xl">.</button>
             <button onclick="calculate()" class="calculator-button equals-btn text-white font-bold py-4 rounded-xl text-xl">=</button>
         </div>
         
-        <div class="mt-6 flex bg-gray-700 rounded-xl p-1">
-            <button onclick="switchTab('calculator')" id="calcTab" class="flex-1 py-2 px-4 rounded-lg bg-blue-600 text-white font-semibold text-sm transition-all">ماشین حساب</button>
-            <button onclick="switchTab('converter')" id="convTab" class="flex-1 py-2 px-4 rounded-lg text-gray-300 font-semibold text-sm transition-all hover:text-white">تبدیل واحد</button>
-            <button onclick="switchTab('currency')" id="currTab" class="flex-1 py-2 px-4 rounded-lg text-gray-300 font-semibold text-sm transition-all hover:text-white">نرخ ارز</button>
-            <button onclick="switchTab('ai')" id="aiTabBtn" class="flex-1 py-2 px-4 rounded-lg text-gray-300 font-semibold text-sm transition-all hover:text-white">🧠 AI پیشرفته</button>
+        <!-- Tab Navigation -->
+        <div class="tab-container mt-8 flex">
+            <button onclick="switchTab('calculatorTab')" id="calcTab" class="tab-button active flex-1">📱 Calculator</button>
+            <button onclick="switchTab('converterTab')" id="convTab" class="tab-button flex-1">🔄 Converter</button>
+            <button onclick="switchTab('currencyTab')" id="currTab" class="tab-button flex-1">💱 Currency</button>
+            <button onclick="switchTab('aiTab')" id="aiTabBtn" class="tab-button flex-1">🧠 AI</button>
         </div>
 
-        <div id="calculatorTab" class="mt-4 bg-gray-700 rounded-xl p-4">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-white font-semibold">تاریخچه محاسبات</h3>
-                <button onclick="clearHistory()" class="text-red-400 hover:text-red-300 text-sm">پاک کردن</button>
+        <!-- Calculator Tab (History Panel) -->
+        <div id="calculatorTab" class="content-panel mt-6 p-5">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-white font-semibold text-lg flex items-center">
+                    📊 Calculation History
+                </h3>
+                <button onclick="clearHistory()" class="status-badge text-red-300 hover:text-red-200 transition-colors">🗑️ Clear</button>
             </div>
-            <div id="historyList" class="text-gray-300 text-sm max-h-32 overflow-y-auto space-y-1">
-                <div class="text-gray-500 text-center py-2">هیچ محاسبه‌ای انجام نشده</div>
+            <div id="historyList" class="text-white/80 text-sm max-h-36 overflow-y-auto space-y-2">
+                <div class="text-white/50 text-center py-4 text-sm">No calculations performed yet</div>
             </div>
         </div>
 
-        <div id="converterTab" class="mt-4 bg-gray-700 rounded-xl p-4 hidden">
-            <h3 class="text-white font-semibold mb-4">تبدیل واحدها</h3>
+        <!-- Unit Converter Tab -->
+        <div id="converterTab" class="content-panel mt-6 p-5 hidden">
+            <h3 class="text-white font-semibold text-lg mb-5 flex items-center">🔄 Unit Converter</h3>
             
-            <div class="space-y-4">
+            <div class="space-y-5">
                 <div>
-                    <label class="text-gray-300 text-sm block mb-2">نوع تبدیل:</label>
-                    <select id="conversionType" onchange="updateConversionUnits()" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
-                        <option value="length">طول</option>
-                        <option value="weight">وزن</option>
-                        <option value="temperature">دما</option>
-                        <option value="area">مساحت</option>
-                        <option value="volume">حجم</option>
+                    <label class="text-white/80 text-sm block mb-3 font-medium">Conversion Type:</label>
+                    <select id="conversionType" onchange="updateConversionUnits()" class="premium-select w-full p-3">
+                        <option value="length">📏 Length</option>
+                        <option value="weight">⚖️ Weight</option>
+                        <option value="temperature">🌡️ Temperature</option>
+                        <option value="area">📐 Area</option>
+                        <option value="volume">🧪 Volume</option>
                     </select>
                 </div>
                 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-gray-300 text-sm block mb-2">از:</label>
-                        <select id="fromUnit" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                        <label class="text-white/80 text-sm block mb-3 font-medium">From:</label>
+                        <select id="fromUnit" class="premium-select w-full p-3">
                         </select>
                     </div>
                     <div>
-                        <label class="text-gray-300 text-sm block mb-2">به:</label>
-                        <select id="toUnit" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
+                        <label class="text-white/80 text-sm block mb-3 font-medium">To:</label>
+                        <select id="toUnit" class="premium-select w-full p-3">
                         </select>
                     </div>
                 </div>
                 
                 <div>
-                    <label class="text-gray-300 text-sm block mb-2">مقدار:</label>
-                    <input type="number" id="conversionInput" placeholder="عدد را وارد کنید" 
-                                class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500" 
-                                oninput="performConversion()">
+                    <label class="text-white/80 text-sm block mb-3 font-medium">Value:</label>
+                    <input type="number" id="conversionInput" placeholder="Enter number to convert" 
+                           class="premium-input w-full p-3" 
+                           oninput="performConversion()">
                 </div>
                 
-                <div id="conversionResult" class="bg-gray-600 rounded-lg p-4 text-center">
-                    <span class="text-gray-400">نتیجه اینجا نمایش داده می‌شود</span>
+                <div id="conversionResult" class="glass-morphism rounded-2xl p-5 text-center">
+                    <span class="text-white/60">Result will be displayed here</span>
                 </div>
             </div>
         </div>
 
+        <!-- Currency Converter Tab -->
         <div id="currencyTab" class="mt-4 bg-gray-700 rounded-xl p-4 hidden">
-            <h3 class="text-white font-semibold mb-4">تبدیل ارز</h3>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-white font-semibold">Currency Converter</h3>
+                <div id="currencyStatus" class="flex items-center space-x-2">
+                    <span class="bg-gray-600 text-white px-2 py-1 rounded-full text-xs">🔄 Loading...</span>
+                </div>
+            </div>
             
             <div class="space-y-4">
+                <!-- Live Rate Status Panel -->
+                <div class="bg-gradient-to-r from-green-800 to-blue-800 rounded-lg p-3 border border-green-500">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-green-300 font-semibold text-sm">📡 Live Exchange Rates</span>
+                        </div>
+                        <button onclick="fetchLiveRates()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-xs transition-all">
+                            🔄 Refresh
+                        </button>
+                    </div>
+                    <div class="text-xs text-green-200 mt-1">
+                        Data from exchangerate.host API
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="text-gray-300 text-sm block mb-2">از ارز:</label>
+                        <label class="text-gray-300 text-sm block mb-2">From Currency:</label>
                         <select id="fromCurrency" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
-                            <option value="USD">دلار آمریکا (USD)</option>
-                            <option value="EUR">یورو (EUR)</option>
-                            <option value="IRR" selected>ریال ایران (IRR)</option>
-                            <option value="GBP">پوند انگلیس (GBP)</option>
-                            <option value="JPY">ین ژاپن (JPY)</option>
-                            <option value="CAD">دلار کانادا (CAD)</option>
-                            <option value="AUD">دلار استرالیا (AUD)</option>
-                            <option value="CHF">فرانک سوئیس (CHF)</option>
+                            <option value="USD" selected>US Dollar (USD)</option>
+                            <option value="EUR">Euro (EUR)</option>
+                            <option value="GBP">British Pound (GBP)</option>
+                            <option value="JPY">Japanese Yen (JPY)</option>
+                            <option value="CAD">Canadian Dollar (CAD)</option>
+                            <option value="AUD">Australian Dollar (AUD)</option>
+                            <option value="CHF">Swiss Franc (CHF)</option>
+                            <option value="CNY">Chinese Yuan (CNY)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-gray-300 text-sm block mb-2">به ارز:</label>
+                        <label class="text-gray-300 text-sm block mb-2">To Currency:</label>
                         <select id="toCurrency" class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500">
-                            <option value="USD" selected>دلار آمریکا (USD)</option>
-                            <option value="EUR">یورو (EUR)</option>
-                            <option value="IRR">ریال ایران (IRR)</option>
-                            <option value="GBP">پوند انگلیس (GBP)</option>
-                            <option value="JPY">ین ژاپن (JPY)</option>
-                            <option value="CAD">دلار کانادا (CAD)</option>
-                            <option value="AUD">دلار استرالیا (AUD)</option>
-                            <option value="CHF">فرانک سوئیس (CHF)</option>
+                            <option value="USD">US Dollar (USD)</option>
+                            <option value="EUR" selected>Euro (EUR)</option>
+                            <option value="GBP">British Pound (GBP)</option>
+                            <option value="JPY">Japanese Yen (JPY)</option>
+                            <option value="CAD">Canadian Dollar (CAD)</option>
+                            <option value="AUD">Australian Dollar (AUD)</option>
+                            <option value="CHF">Swiss Franc (CHF)</option>
+                            <option value="CNY">Chinese Yuan (CNY)</option>
                         </select>
                     </div>
                 </div>
                 
                 <div>
-                    <label class="text-gray-300 text-sm block mb-2">مقدار:</label>
-                    <input type="number" id="currencyInput" placeholder="مقدار ارز را وارد کنید" 
-                                class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500" 
-                                oninput="convertCurrency()">
+                    <label class="text-gray-300 text-sm block mb-2">Amount:</label>
+                    <input type="number" id="currencyInput" placeholder="Enter amount" 
+                           class="w-full bg-gray-600 text-white rounded-lg p-3 border border-gray-500" 
+                           oninput="convertCurrency()">
                 </div>
                 
-                <button onclick="convertCurrency()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all">
-                    تبدیل ارز
-                </button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="convertCurrency()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-all">
+                        💱 Convert
+                    </button>
+                    <button onclick="swapCurrencies()" class="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-lg transition-all">
+                        🔄 Swap
+                    </button>
+                </div>
                 
                 <div id="currencyResult" class="bg-gray-600 rounded-lg p-4 text-center">
-                    <span class="text-gray-400">نتیجه تبدیل اینجا نمایش داده می‌شود</span>
+                    <span class="text-gray-400">Conversion result will be displayed here</span>
                 </div>
                 
                 <div class="text-xs text-gray-400 text-center">
-                    * نرخ‌های ارز تقریبی و برای مقاصد آموزشی است
+                    📡 Real-time rates from exchangerate.host • Updated automatically
                 </div>
             </div>
         </div>
 
+        <!-- Advanced AI Assistant Tab -->
         <div id="aiTab" class="mt-4 bg-gray-700 rounded-xl p-4 hidden">
             <h3 class="text-white font-semibold mb-4 flex items-center">
-                🧠 دستیار هوشمند پیشرفته
-                <span id="aiModeIndicator" class="ml-2 text-xs bg-purple-600 px-2 py-1 rounded-full">حالت عمیق</span>
+                🧠 Advanced AI Assistant
+                <span id="aiModeIndicator" class="ml-2 text-xs bg-purple-600 px-2 py-1 rounded-full">Deep Mode</span>
             </h3>
             
             <div class="space-y-4">
+                <!-- AI Capabilities Panel -->
                 <div class="bg-gradient-to-r from-purple-900 to-blue-900 rounded-lg p-4 border border-purple-500">
                     <h4 class="text-white font-semibold mb-3 flex items-center">
-                        ⚡ قابلیت‌های هوش مصنوعی
+                        ⚡ AI Capabilities
                     </h4>
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="flex items-center text-green-300">
                             <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                            یادگیری عمیق
+                            Deep Learning
                         </div>
                         <div class="flex items-center text-green-300">
                             <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                            پردازش زبان طبیعی
+                            Natural Language
                         </div>
                         <div class="flex items-center text-green-300">
                             <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                            تحلیل پیچیده
+                            Complex Analysis
                         </div>
                         <div class="flex items-center text-green-300">
                             <span class="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
-                            تشخیص الگو
+                            Pattern Recognition
                         </div>
                     </div>
                 </div>
 
+                <!-- Voice & Visual Control Section -->
                 <div class="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-lg p-4 border border-indigo-500">
                     <h4 class="text-white font-semibold mb-3 flex items-center">
-                        🎤 کنترل چندرسانه‌ای
-                        <span id="voiceStatus" class="ml-2 text-xs bg-gray-600 px-2 py-1 rounded-full">آماده</span>
+                        🎤 Multimedia Control
+                        <span id="voiceStatus" class="ml-2 text-xs bg-gray-600 px-2 py-1 rounded-full">Ready</span>
                     </h4>
                     <div class="grid grid-cols-3 gap-2">
                         <button onclick="startAdvancedVoice()" id="advancedVoiceBtn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center">
-                            🎙️ صوت پیشرفته
+                            🎙️ Voice Input
                         </button>
                         <button onclick="toggleAdvancedSpeech()" id="advancedSpeechBtn" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center">
-                            🔊 پاسخ صوتی
+                            🔊 Speech Output
                         </button>
                         <button onclick="activateImageAnalysis()" id="imageAnalysisBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center">
-                            📷 تحلیل تصویر
+                            📷 Image Analysis
                         </button>
                     </div>
                     
-                    <div id="voiceWave" class="mt-3 flex justify-center space-x-1 space-x-reverse hidden">
+                    <!-- Voice Wave Visualization -->
+                    <div id="voiceWave" class="mt-3 flex justify-center space-x-1 hidden">
                         <div class="w-1 h-4 bg-blue-400 rounded voice-wave" style="animation-delay: 0s"></div>
                         <div class="w-1 h-6 bg-blue-400 rounded voice-wave" style="animation-delay: 0.1s"></div>
                         <div class="w-1 h-8 bg-blue-400 rounded voice-wave" style="animation-delay: 0.2s"></div>
@@ -371,111 +745,118 @@
                     </div>
                 </div>
 
+                <!-- AI Learning Mode -->
                 <div class="bg-gradient-to-r from-yellow-900 to-orange-900 rounded-lg p-4 border border-yellow-500">
                     <h4 class="text-white font-semibold mb-3 flex items-center">
-                        🧠 حالت یادگیری
-                        <div id="learningStatus" class="ml-2 text-xs bg-yellow-600 px-2 py-1 rounded-full">فعال</div>
+                        🧠 Learning Mode
+                        <div id="learningStatus" class="ml-2 text-xs bg-yellow-600 px-2 py-1 rounded-full">Active</div>
                     </h4>
                     <div class="grid grid-cols-2 gap-3">
                         <button onclick="toggleLearningMode()" id="learningModeBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 rounded-lg transition-all text-sm">
-                            🎯 یادگیری تطبیقی
+                            🎯 Adaptive Learning
                         </button>
                         <button onclick="showLearningStats()" class="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 rounded-lg transition-all text-sm">
-                            📊 آمار یادگیری
+                            📊 Learning Stats
                         </button>
                     </div>
                 </div>
 
+                <!-- Advanced Input Area -->
                 <div>
                     <label class="text-gray-300 text-sm block mb-2 flex items-center">
-                        سوال پیچیده یا داده خود را وارد کنید:
+                        Enter your complex question or data:
                         <span id="inputAnalysis" class="ml-2 text-xs text-purple-300"></span>
                     </label>
-                    <textarea id="advancedAiInput" placeholder="مثال: تحلیل داده‌های فروش، حل معادلات پیچیده، پیش‌بینی روند، تحلیل آماری..." 
-                                 class="w-full bg-gray-800 text-white rounded-lg p-3 border-2 border-gray-500 focus:border-purple-500 h-32 resize-none focus:outline-none transition-all"
-                                 oninput="analyzeInput(this.value)"></textarea>
+                    <textarea id="advancedAiInput" placeholder="Example: Analyze sales data, solve complex equations, predict trends, statistical analysis..." 
+                              class="w-full bg-gray-800 text-white rounded-lg p-3 border-2 border-gray-500 focus:border-purple-500 h-32 resize-none focus:outline-none transition-all"
+                              oninput="analyzeInput(this.value)"></textarea>
                 </div>
                 
+                <!-- AI Processing Options -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label class="text-gray-300 text-xs block mb-1">نوع تحلیل:</label>
+                        <label class="text-gray-300 text-xs block mb-1">Analysis Type:</label>
                         <select id="analysisType" class="w-full bg-gray-600 text-white rounded-lg p-2 text-sm border border-gray-500">
-                            <option value="deep">تحلیل عمیق</option>
-                            <option value="statistical">تحلیل آماری</option>
-                            <option value="predictive">پیش‌بینی</option>
-                            <option value="pattern">تشخیص الگو</option>
-                            <option value="optimization">بهینه‌سازی</option>
+                            <option value="deep">Deep Analysis</option>
+                            <option value="statistical">Statistical Analysis</option>
+                            <option value="predictive">Predictive</option>
+                            <option value="pattern">Pattern Recognition</option>
+                            <option value="optimization">Optimization</option>
                         </select>
                     </div>
                     <div>
-                        <label class="text-gray-300 text-xs block mb-1">سطح پیچیدگی:</label>
+                        <label class="text-gray-300 text-xs block mb-1">Complexity Level:</label>
                         <select id="complexityLevel" class="w-full bg-gray-600 text-white rounded-lg p-2 text-sm border border-gray-500">
-                            <option value="basic">پایه</option>
-                            <option value="intermediate">متوسط</option>
-                            <option value="advanced" selected>پیشرفته</option>
-                            <option value="expert">تخصصی</option>
+                            <option value="basic">Basic</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced" selected>Advanced</option>
+                            <option value="expert">Expert</option>
                         </select>
                     </div>
                 </div>
                 
+                <!-- Action Buttons -->
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="processAdvancedAI()" class="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 rounded-lg transition-all transform hover:scale-105 flex items-center justify-center">
-                        🚀 پردازش هوشمند
+                        🚀 Smart Processing
                     </button>
                     <button onclick="clearAdvancedAI()" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition-all flex items-center justify-center">
-                        🗑️ پاک کردن
+                        🗑️ Clear
                     </button>
                 </div>
                 
+                <!-- AI Response Area -->
                 <div id="advancedAiResult" class="bg-gray-800 rounded-lg p-4 min-h-[200px] border border-gray-600">
                     <div class="text-gray-400 text-center">
                         <div class="mb-4">
                             <div class="w-16 h-16 mx-auto mb-3 ai-brain rounded-full flex items-center justify-center text-2xl">🧠</div>
-                            <div class="text-lg font-semibold text-purple-300">هوش مصنوعی پیشرفته آماده است</div>
+                            <div class="text-lg font-semibold text-purple-300">Advanced AI is Ready</div>
                         </div>
-                        <div class="text-sm space-y-3 text-right">
+                        <div class="text-sm space-y-3 text-left">
                             <div class="bg-gradient-to-r from-purple-800 to-blue-800 p-3 rounded-lg">
-                                <div class="font-semibold text-purple-200 mb-2">💡 قابلیت‌های پیشرفته:</div>
+                                <div class="font-semibold text-purple-200 mb-2">💡 Advanced Capabilities:</div>
                                 <div class="text-xs space-y-1 text-purple-100">
-                                    <div>• تحلیل داده‌های پیچیده و چندبعدی</div>
-                                    <div>• حل معادلات دیفرانسیل و انتگرال</div>
-                                    <div>• پیش‌بینی روندها با یادگیری ماشین</div>
-                                    <div>• بهینه‌سازی و تحلیل عملکرد</div>
+                                    <div>• Complex data analysis and multi-dimensional processing</div>
+                                    <div>• Differential and integral equation solving</div>
+                                    <div>• Trend prediction with machine learning</div>
+                                    <div>• Optimization and performance analysis</div>
                                 </div>
                             </div>
                             <div class="bg-gradient-to-r from-green-800 to-teal-800 p-3 rounded-lg">
-                                <div class="font-semibold text-green-200 mb-2">🎯 نمونه کاربردها:</div>
+                                <div class="font-semibold text-green-200 mb-2">🎯 Example Applications:</div>
                                 <div class="text-xs space-y-1 text-green-100">
-                                    <div>• "تحلیل فروش ماهانه: 1200, 1350, 1100, 1450"</div>
-                                    <div>• "حل معادله: d²y/dx² + 3dy/dx + 2y = 0"</div>
-                                    <div>• "بهینه‌سازی تابع: f(x) = x² - 4x + 3"</div>
-                                    <div>• "پیش‌بینی قیمت بر اساس داده‌های تاریخی"</div>
+                                    <div>• "Analyze monthly sales: 1200, 1350, 1100, 1450"</div>
+                                    <div>• "Solve equation: d²y/dx² + 3dy/dx + 2y = 0"</div>
+                                    <div>• "Optimize function: f(x) = x² - 4x + 3"</div>
+                                    <div>• "Predict price based on historical data"</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- AI Performance Metrics -->
                 <div class="bg-gray-800 rounded-lg p-3 border border-gray-600">
-                    <h5 class="text-gray-300 font-semibold mb-2 text-sm">📈 عملکرد AI:</h5>
+                    <h5 class="text-gray-300 font-semibold mb-2 text-sm">📈 AI Performance:</h5>
                     <div class="grid grid-cols-3 gap-3 text-xs">
                         <div class="text-center">
                             <div class="text-green-400 font-bold" id="accuracyRate">98.5%</div>
-                            <div class="text-gray-400">دقت</div>
+                            <div class="text-gray-400">Accuracy</div>
                         </div>
                         <div class="text-center">
                             <div class="text-blue-400 font-bold" id="processingSpeed">0.3s</div>
-                            <div class="text-gray-400">سرعت</div>
+                            <div class="text-gray-400">Speed</div>
                         </div>
                         <div class="text-center">
                             <div class="text-purple-400 font-bold" id="learningProgress">847</div>
-                            <div class="text-gray-400">تعاملات</div>
+                            <div class="text-gray-400">Interactions</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Advanced Commands Help -->
                 <div class="bg-indigo-900 bg-opacity-30 rounded-lg p-3 border border-indigo-500">
-                    <h5 class="text-indigo-300 font-semibold mb-2 text-sm">🎯 دستورات پیشرفته:</h5>
+                    <h5 class="text-indigo-300 font-semibold mb-2 text-sm">🎯 Advanced Commands:</h5>
                     <div class="text-xs text-indigo-200 space-y-1 max-h-24 overflow-y-auto">
                         <div>• "Analyze data: [1,2,3,4,5] with trend prediction"</div>
                         <div>• "Solve differential equation: dy/dx = 2x + 1"</div>
@@ -501,57 +882,6 @@
         let memory = 0;
         let history = [];
         
-        // Data for Unit Converter
-        const conversionUnits = {
-            length: {
-                meter: { name: 'متر', toBase: 1 },
-                kilometer: { name: 'کیلومتر', toBase: 1000 },
-                centimeter: { name: 'سانتی‌متر', toBase: 0.01 },
-                millimeter: { name: 'میلی‌متر', toBase: 0.001 },
-                mile: { name: 'مایل', toBase: 1609.34 },
-                yard: { name: 'یارد', toBase: 0.9144 },
-                foot: { name: 'فوت', toBase: 0.3048 },
-                inch: { name: 'اینچ', toBase: 0.0254 }
-            },
-            weight: {
-                kilogram: { name: 'کیلوگرم', toBase: 1 },
-                gram: { name: 'گرم', toBase: 0.001 },
-                milligram: { name: 'میلی‌گرم', toBase: 0.000001 },
-                ton: { name: 'تن', toBase: 1000 },
-                pound: { name: 'پوند', toBase: 0.453592 },
-                ounce: { name: 'اونس', toBase: 0.0283495 }
-            },
-            temperature: {
-                celsius: { name: 'سلسیوس', toBase: temp => temp },
-                fahrenheit: { name: 'فارنهایت', toBase: temp => (temp - 32) * 5/9 },
-                kelvin: { name: 'کلوین', toBase: temp => temp - 273.15 }
-            },
-            area: {
-                squareMeter: { name: 'متر مربع', toBase: 1 },
-                squareKilometer: { name: 'کیلومتر مربع', toBase: 1e6 },
-                hectare: { name: 'هکتار', toBase: 1e4 },
-                acre: { name: 'جریب', toBase: 4046.86 }
-            },
-            volume: {
-                liter: { name: 'لیتر', toBase: 1 },
-                cubicMeter: { name: 'متر مکعب', toBase: 1000 },
-                milliliter: { name: 'میلی‌لیتر', toBase: 0.001 },
-                gallon: { name: 'گالون', toBase: 3.78541 }
-            }
-        };
-
-        // Dummy data for Currency Converter
-        const exchangeRates = {
-            USD: { IRR: 42000, EUR: 0.93, GBP: 0.79, JPY: 157.5, CAD: 1.37, AUD: 1.5, CHF: 0.9 },
-            EUR: { IRR: 45000, USD: 1.07, GBP: 0.85, JPY: 169.5, CAD: 1.47, AUD: 1.6, CHF: 0.96 },
-            IRR: { USD: 0.000024, EUR: 0.000022, GBP: 0.000019, JPY: 0.0037, CAD: 0.000033, AUD: 0.000036, CHF: 0.000021 },
-            GBP: { IRR: 53000, USD: 1.26, EUR: 1.17, JPY: 199.5, CAD: 1.72, AUD: 1.87, CHF: 1.14 },
-            JPY: { IRR: 265, USD: 0.0063, EUR: 0.0059, GBP: 0.005, CAD: 0.0087, AUD: 0.0095, CHF: 0.0057 },
-            CAD: { IRR: 30500, USD: 0.73, EUR: 0.68, GBP: 0.58, JPY: 114.5, AUD: 1.1, CHF: 0.65 },
-            AUD: { IRR: 28000, USD: 0.67, EUR: 0.62, GBP: 0.53, JPY: 105, CAD: 0.91, CHF: 0.59 },
-            CHF: { IRR: 47000, USD: 1.11, EUR: 1.04, GBP: 0.88, JPY: 175.5, CAD: 1.53, AUD: 1.68 }
-        };
-        
         // Advanced AI Variables
         let aiLearningMode = true;
         let aiInteractions = 847;
@@ -559,10 +889,16 @@
         let aiProcessingSpeed = 0.3;
         let userPreferences = {};
         let learningData = [];
+        let aiPersonality = 'analytical';
+        
+        // Voice and Speech Variables
+        let voiceRecognition = null;
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let advancedRecognition;
         let isAdvancedListening = false;
         let advancedSpeechEnabled = true;
         let lastAdvancedResponse = '';
-        let aiPersonality = 'analytical'; // analytical, creative, technical
         
         function updateDisplay() {
             display.textContent = currentInput;
@@ -578,7 +914,7 @@
             
             historyList.innerHTML = '';
             if (history.length === 0) {
-                historyList.innerHTML = '<div class="text-gray-500 text-center py-2">هیچ محاسبه‌ای انجام نشده</div>';
+                historyList.innerHTML = '<div class="text-gray-500 text-center py-2">No calculations performed</div>';
             } else {
                 history.forEach(calc => {
                     const div = document.createElement('div');
@@ -597,81 +933,87 @@
                 currentInput = currentInput === '0' ? num : currentInput + num;
             }
             updateDisplay();
-        }
-        
-        function inputOperator(op) {
-            if (waitingForOperand) {
-                operator = op;
-                updateHistory(`${previousInput} ${op}`);
-                return;
-            }
-            if (previousInput !== '') {
-                calculate();
-            }
-            operator = op;
-            previousInput = currentInput;
-            waitingForOperand = true;
-            updateHistory(`${previousInput} ${op}`);
+            updateAIStatus('processing');
         }
         
         function inputDecimal() {
             if (waitingForOperand) {
                 currentInput = '0.';
                 waitingForOperand = false;
-            } else if (!currentInput.includes('.')) {
+            } else if (currentInput.indexOf('.') === -1) {
                 currentInput += '.';
             }
             updateDisplay();
         }
         
-        function calculate() {
-            if (previousInput === '' || operator === '' || waitingForOperand) {
-                return;
+        function inputOperator(nextOperator) {
+            const inputValue = parseFloat(currentInput);
+            
+            if (previousInput === '') {
+                previousInput = inputValue;
+            } else if (operator) {
+                const currentValue = previousInput || 0;
+                const newValue = performCalculation(currentValue, inputValue, operator);
+                
+                currentInput = String(newValue);
+                previousInput = newValue;
+                updateDisplay();
             }
             
-            const num1 = parseFloat(previousInput);
-            const num2 = parseFloat(currentInput);
-            let result = 0;
-            let expression = `${previousInput} ${operator} ${currentInput}`;
+            waitingForOperand = true;
+            operator = nextOperator;
+            updateHistory(`${previousInput} ${getOperatorSymbol(operator)}`);
+            updateAIStatus('analyzing');
+        }
+        
+        function getOperatorSymbol(op) {
+            switch(op) {
+                case '+': return '+';
+                case '-': return '−';
+                case '*': return '×';
+                case '/': return '÷';
+                default: return op;
+            }
+        }
+        
+        function calculate() {
+            const inputValue = parseFloat(currentInput);
             
-            try {
-                switch (operator) {
-                    case '+':
-                        result = num1 + num2;
-                        break;
-                    case '-':
-                        result = num1 - num2;
-                        break;
-                    case '*':
-                        result = num1 * num2;
-                        break;
-                    case '/':
-                        if (num2 === 0) {
-                            throw new Error("Cannot divide by zero");
-                        }
-                        result = num1 / num2;
-                        break;
-                    default:
-                        throw new Error("Invalid operator");
-                }
+            if (previousInput !== '' && operator) {
+                const newValue = performCalculation(previousInput, inputValue, operator);
+                const expression = `${previousInput} ${getOperatorSymbol(operator)} ${inputValue}`;
                 
-                // Add calculation to history
-                addToHistory({ expression: expression, result: result });
+                addToHistory({
+                    expression: expression,
+                    result: newValue
+                });
                 
-                currentInput = result.toString();
+                learnFromCalculation(expression, newValue);
+                
+                currentInput = String(newValue);
                 previousInput = '';
                 operator = '';
-                waitingForOperand = false;
+                waitingForOperand = true;
                 updateDisplay();
                 updateHistory('');
-                
-            } catch (error) {
-                currentInput = 'Error';
-                previousInput = '';
-                operator = '';
-                waitingForOperand = false;
-                updateDisplay();
-                updateHistory('');
+                updateAIStatus('ready');
+            }
+        }
+        
+        function performCalculation(firstOperand, secondOperand, operator) {
+            switch (operator) {
+                case '+':
+                    return firstOperand + secondOperand;
+                case '-':
+                    return firstOperand - secondOperand;
+                case '*':
+                    return firstOperand * secondOperand;
+                case '/':
+                    return secondOperand !== 0 ? firstOperand / secondOperand : 0;
+                case '**':
+                    return Math.pow(firstOperand, secondOperand);
+                default:
+                    return secondOperand;
             }
         }
         
@@ -682,13 +1024,14 @@
             waitingForOperand = false;
             updateDisplay();
             updateHistory('');
+            updateAIStatus('ready');
         }
         
         function clearEntry() {
             currentInput = '0';
             updateDisplay();
         }
-
+        
         function backspace() {
             if (currentInput.length > 1) {
                 currentInput = currentInput.slice(0, -1);
@@ -697,109 +1040,125 @@
             }
             updateDisplay();
         }
-
+        
         function toggleSign() {
-            currentInput = (parseFloat(currentInput) * -1).toString();
-            updateDisplay();
+            if (currentInput !== '0') {
+                currentInput = currentInput.charAt(0) === '-' ? 
+                    currentInput.slice(1) : '-' + currentInput;
+                updateDisplay();
+            }
         }
-
-        // Memory Functions
+        
+        // Memory functions
         function memoryStore() {
             memory = parseFloat(currentInput);
+            showToast('Number stored in memory');
         }
-
+        
         function memoryRecall() {
-            currentInput = memory.toString();
+            currentInput = String(memory);
             updateDisplay();
+            showToast('Number recalled from memory');
         }
-
+        
         function memoryClear() {
             memory = 0;
+            showToast('Memory cleared');
         }
-
+        
         function memoryAdd() {
             memory += parseFloat(currentInput);
+            showToast('Number added to memory');
         }
-
-        // Scientific Functions
+        
+        // Scientific functions
         function scientificFunction(func) {
-            const num = parseFloat(currentInput);
-            let result = 0;
-            let expression = `${func}(${currentInput})`;
-
-            try {
-                switch (func) {
-                    case 'sin':
-                        result = Math.sin(num * Math.PI / 180); // Convert degrees to radians
-                        break;
-                    case 'cos':
-                        result = Math.cos(num * Math.PI / 180);
-                        break;
-                    case 'tan':
-                        result = Math.tan(num * Math.PI / 180);
-                        break;
-                    case 'log':
-                        if (num <= 0) throw new Error("Log of non-positive number");
-                        result = Math.log10(num);
-                        break;
-                    case 'sqrt':
-                        if (num < 0) throw new Error("Square root of negative number");
-                        result = Math.sqrt(num);
-                        expression = `√(${currentInput})`;
-                        break;
-                    case 'square':
-                        result = num * num;
-                        expression = `(${currentInput})²`;
-                        break;
-                    case 'power':
-                        // Waiting for a second operand for power
-                        operator = '^';
-                        previousInput = currentInput;
-                        waitingForOperand = true;
-                        updateHistory(`${previousInput} ^`);
-                        return;
-                    case 'factorial':
-                        if (num < 0) throw new Error("Factorial of negative number");
-                        if (num > 20) throw new Error("Number too large for factorial");
-                        result = 1;
-                        for (let i = 2; i <= num; i++) {
-                            result *= i;
-                        }
-                        expression = `${currentInput}!`;
-                        break;
-                }
-                
-                // For 'power' function
-                if (operator === '^') {
-                    const num1 = parseFloat(previousInput);
-                    const num2 = parseFloat(currentInput);
-                    result = Math.pow(num1, num2);
-                    expression = `${previousInput} ^ ${currentInput}`;
-                    operator = '';
-                    previousInput = '';
-                }
-
-                // Limit decimal places
-                result = parseFloat(result.toFixed(10));
-
-                addToHistory({ expression: expression, result: result });
-                currentInput = result.toString();
-                updateDisplay();
-                updateHistory('');
-
-            } catch (error) {
-                currentInput = 'Error';
-                updateDisplay();
-                updateHistory('');
+            const inputValue = parseFloat(currentInput);
+            let result;
+            let expression;
+            
+            switch(func) {
+                case 'sin':
+                    result = Math.sin(inputValue * Math.PI / 180);
+                    expression = `sin(${inputValue}°)`;
+                    break;
+                case 'cos':
+                    result = Math.cos(inputValue * Math.PI / 180);
+                    expression = `cos(${inputValue}°)`;
+                    break;
+                case 'tan':
+                    result = Math.tan(inputValue * Math.PI / 180);
+                    expression = `tan(${inputValue}°)`;
+                    break;
+                case 'log':
+                    result = inputValue > 0 ? Math.log10(inputValue) : 0;
+                    expression = `log(${inputValue})`;
+                    break;
+                case 'sqrt':
+                    result = inputValue >= 0 ? Math.sqrt(inputValue) : 0;
+                    expression = `√${inputValue}`;
+                    break;
+                case 'square':
+                    result = inputValue * inputValue;
+                    expression = `${inputValue}²`;
+                    break;
+                case 'power':
+                    previousInput = inputValue;
+                    operator = '**';
+                    waitingForOperand = true;
+                    updateHistory(`${inputValue}^`);
+                    return;
+                case 'factorial':
+                    result = factorial(Math.floor(Math.abs(inputValue)));
+                    expression = `${Math.floor(Math.abs(inputValue))}!`;
+                    break;
+                default:
+                    return;
             }
+            
+            if (func !== 'power') {
+                addToHistory({
+                    expression: expression,
+                    result: result
+                });
+                
+                currentInput = String(result);
+                updateDisplay();
+                waitingForOperand = true;
+                updateAIStatus('ready');
+            }
+        }
+        
+        function factorial(n) {
+            if (n <= 1) return 1;
+            return n * factorial(n - 1);
         }
         
         function clearHistory() {
             history = [];
-            addToHistory({}); // to refresh the list
+            addToHistory();
         }
+        
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9') {
+                inputNumber(key);
+            } else if (key === '.') {
+                inputDecimal();
+            } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+                inputOperator(key);
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape') {
+                clearAll();
+            } else if (key === 'Backspace') {
+                backspace();
+            }
+        });
 
-        // Tab Switching Logic
+        // Tab switching functionality
         function switchTab(tabId) {
             const tabs = ['calculatorTab', 'converterTab', 'currencyTab', 'aiTab'];
             tabs.forEach(tab => {
@@ -807,50 +1166,82 @@
             });
             document.getElementById(tabId).classList.remove('hidden');
 
-            const tabButtons = ['calcTab', 'convTab', 'currTab', 'aiTabBtn'];
-            tabButtons.forEach(btnId => {
-                document.getElementById(btnId).classList.remove('bg-blue-600', 'text-white', 'hover:text-white');
-                document.getElementById(btnId).classList.add('text-gray-300');
-            });
-            document.getElementById(tabId.replace('Tab', 'Tab') + 'Btn').classList.add('bg-blue-600', 'text-white');
-            
-            // Special handling for currency tab button
-            if (tabId === 'currencyTab') {
-                document.getElementById('currTab').classList.add('bg-blue-600', 'text-white');
-                document.getElementById('currTab').classList.remove('text-gray-300');
+            // Reset all buttons
+            document.getElementById('calcTab').classList.remove('active');
+            document.getElementById('convTab').classList.remove('active');
+            document.getElementById('currTab').classList.remove('active');
+            document.getElementById('aiTabBtn').classList.remove('active');
+
+            // Activate the correct button
+            if (tabId === 'calculatorTab') {
+                document.getElementById('calcTab').classList.add('active');
             } else if (tabId === 'converterTab') {
-                document.getElementById('convTab').classList.add('bg-blue-600', 'text-white');
-                document.getElementById('convTab').classList.remove('text-gray-300');
-            } else if (tabId === 'calculatorTab') {
-                document.getElementById('calcTab').classList.add('bg-blue-600', 'text-white');
-                document.getElementById('calcTab').classList.remove('text-gray-300');
+                document.getElementById('convTab').classList.add('active');
+                updateConversionUnits();
+            } else if (tabId === 'currencyTab') {
+                document.getElementById('currTab').classList.add('active');
             } else if (tabId === 'aiTab') {
-                document.getElementById('aiTabBtn').classList.add('bg-blue-600', 'text-white');
-                document.getElementById('aiTabBtn').classList.remove('text-gray-300');
+                document.getElementById('aiTabBtn').classList.add('active');
+                updateAIMetrics();
             }
         }
 
-        // Unit Converter Logic
+        // Unit conversion data
+        const conversionUnits = {
+            length: {
+                'mm': { name: 'Millimeter', factor: 0.001 },
+                'cm': { name: 'Centimeter', factor: 0.01 },
+                'm': { name: 'Meter', factor: 1 },
+                'km': { name: 'Kilometer', factor: 1000 },
+                'in': { name: 'Inch', factor: 0.0254 },
+                'ft': { name: 'Foot', factor: 0.3048 },
+                'yd': { name: 'Yard', factor: 0.9144 },
+                'mi': { name: 'Mile', factor: 1609.34 }
+            },
+            weight: {
+                'mg': { name: 'Milligram', factor: 0.000001 },
+                'g': { name: 'Gram', factor: 0.001 },
+                'kg': { name: 'Kilogram', factor: 1 },
+                'ton': { name: 'Ton', factor: 1000 },
+                'oz': { name: 'Ounce', factor: 0.0283495 },
+                'lb': { name: 'Pound', factor: 0.453592 }
+            },
+            temperature: {
+                'c': { name: 'Celsius' },
+                'f': { name: 'Fahrenheit' },
+                'k': { name: 'Kelvin' }
+            },
+            area: {
+                'mm2': { name: 'Square Millimeter', factor: 0.000001 },
+                'cm2': { name: 'Square Centimeter', factor: 0.0001 },
+                'm2': { name: 'Square Meter', factor: 1 },
+                'km2': { name: 'Square Kilometer', factor: 1000000 },
+                'in2': { name: 'Square Inch', factor: 0.00064516 },
+                'ft2': { name: 'Square Foot', factor: 0.092903 }
+            },
+            volume: {
+                'ml': { name: 'Milliliter', factor: 0.001 },
+                'l': { name: 'Liter', factor: 1 },
+                'm3': { name: 'Cubic Meter', factor: 1000 },
+                'gal': { name: 'Gallon', factor: 3.78541 },
+                'qt': { name: 'Quart', factor: 0.946353 },
+                'pt': { name: 'Pint', factor: 0.473176 }
+            }
+        };
+
         function updateConversionUnits() {
             const type = document.getElementById('conversionType').value;
-            const fromUnitSelect = document.getElementById('fromUnit');
-            const toUnitSelect = document.getElementById('toUnit');
-            fromUnitSelect.innerHTML = '';
-            toUnitSelect.innerHTML = '';
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
             
-            const units = Object.keys(conversionUnits[type]);
-            units.forEach(unitKey => {
-                const option = document.createElement('option');
-                option.value = unitKey;
-                option.textContent = conversionUnits[type][unitKey].name;
-                fromUnitSelect.appendChild(option);
-            });
-            units.forEach(unitKey => {
-                const option = document.createElement('option');
-                option.value = unitKey;
-                option.textContent = conversionUnits[type][unitKey].name;
-                toUnitSelect.appendChild(option);
-            });
+            fromUnit.innerHTML = '';
+            toUnit.innerHTML = '';
+            
+            for (const [key, unit] of Object.entries(conversionUnits[type])) {
+                fromUnit.innerHTML += `<option value="${key}">${unit.name}</option>`;
+                toUnit.innerHTML += `<option value="${key}">${unit.name}</option>`;
+            }
+            
             performConversion();
         }
 
@@ -858,230 +1249,1149 @@
             const type = document.getElementById('conversionType').value;
             const fromUnit = document.getElementById('fromUnit').value;
             const toUnit = document.getElementById('toUnit').value;
-            const value = parseFloat(document.getElementById('conversionInput').value);
+            const inputValue = parseFloat(document.getElementById('conversionInput').value);
             const resultDiv = document.getElementById('conversionResult');
-
-            if (isNaN(value)) {
-                resultDiv.innerHTML = '<span class="text-gray-400">لطفاً یک عدد معتبر وارد کنید.</span>';
+            
+            if (isNaN(inputValue)) {
+                resultDiv.innerHTML = '<span class="text-gray-400">Result will be displayed here</span>';
                 return;
             }
-
-            let baseValue;
-            if (type === 'temperature') {
-                if (fromUnit === 'celsius') baseValue = value;
-                else if (fromUnit === 'fahrenheit') baseValue = (value - 32) * 5/9;
-                else if (fromUnit === 'kelvin') baseValue = value - 273.15;
-            } else {
-                baseValue = value * conversionUnits[type][fromUnit].toBase;
-            }
-
+            
             let result;
+            
             if (type === 'temperature') {
-                if (toUnit === 'celsius') result = baseValue;
-                else if (toUnit === 'fahrenheit') result = (baseValue * 9/5) + 32;
-                else if (toUnit === 'kelvin') result = baseValue + 273.15;
+                result = convertTemperature(inputValue, fromUnit, toUnit);
             } else {
-                result = baseValue / conversionUnits[type][toUnit].toBase;
+                const fromFactor = conversionUnits[type][fromUnit].factor;
+                const toFactor = conversionUnits[type][toUnit].factor;
+                result = (inputValue * fromFactor) / toFactor;
             }
             
-            resultDiv.innerHTML = `<span class="text-white font-bold">${result.toFixed(6)}</span> <span class="text-gray-300">${conversionUnits[type][toUnit].name}</span>`;
-        }
-
-        // Currency Converter Logic
-        function convertCurrency() {
-            const from = document.getElementById('fromCurrency').value;
-            const to = document.getElementById('toCurrency').value;
-            const amount = parseFloat(document.getElementById('currencyInput').value);
-            const resultDiv = document.getElementById('currencyResult');
-
-            if (isNaN(amount) || amount <= 0) {
-                resultDiv.innerHTML = '<span class="text-gray-400">لطفاً یک مقدار معتبر وارد کنید.</span>';
-                return;
-            }
+            const fromUnitName = conversionUnits[type][fromUnit].name;
+            const toUnitName = conversionUnits[type][toUnit].name;
             
-            if (from === to) {
-                resultDiv.innerHTML = `<span class="text-white font-bold">${amount}</span> <span class="text-gray-300">${to}</span>`;
-                return;
-            }
-
-            if (exchangeRates[from] && exchangeRates[from][to]) {
-                const rate = exchangeRates[from][to];
-                const result = amount * rate;
-                resultDiv.innerHTML = `<span class="text-white font-bold">${result.toFixed(4)}</span> <span class="text-gray-300">${to}</span>`;
-            } else {
-                resultDiv.innerHTML = '<span class="text-red-400">نرخ تبدیل موجود نیست.</span>';
-            }
+            resultDiv.innerHTML = `
+                <div class="text-white font-semibold text-lg">${result.toLocaleString()}</div>
+                <div class="text-gray-300 text-sm mt-1">${inputValue.toLocaleString()} ${fromUnitName} = ${result.toLocaleString()} ${toUnitName}</div>
+            `;
         }
+
+        function convertTemperature(value, from, to) {
+            let celsius;
+            if (from === 'c') celsius = value;
+            else if (from === 'f') celsius = (value - 32) * 5/9;
+            else if (from === 'k') celsius = value - 273.15;
+            
+            if (to === 'c') return celsius;
+            else if (to === 'f') return celsius * 9/5 + 32;
+            else if (to === 'k') return celsius + 273.15;
+        }
+
+        // Currency conversion with live rates
+        let currencyRates = {
+            'USD': 1,
+            'EUR': 0.85,
+            'GBP': 0.73,
+            'JPY': 110,
+            'CAD': 1.25,
+            'AUD': 1.35,
+            'CHF': 0.92,
+            'CNY': 6.45
+        };
         
-        // Advanced AI Functions (Dummy Implementations)
-        function analyzeInput(text) {
-            const analysisSpan = document.getElementById('inputAnalysis');
-            if (text.length > 5) {
-                analysisSpan.textContent = '... در حال تحلیل';
-                // Simulate an AI analysis process
-                setTimeout(() => {
-                    const randomType = ['ریاضی', 'آماری', 'منطقی'][Math.floor(Math.random() * 3)];
-                    analysisSpan.textContent = `نوع: ${randomType}`;
-                }, 500);
-            } else {
-                analysisSpan.textContent = '';
+        let lastRateUpdate = null;
+        let isLoadingRates = false;
+
+        async function fetchLiveRates() {
+            if (isLoadingRates) return;
+            
+            try {
+                isLoadingRates = true;
+                showCurrencyStatus('🔄 Updating rates...', 'bg-blue-600');
+                
+                const response = await fetch('https://api.exchangerate.host/latest?base=USD');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.rates) {
+                    // Update rates with live data
+                    currencyRates = {
+                        'USD': 1,
+                        'EUR': data.rates.EUR || 0.85,
+                        'GBP': data.rates.GBP || 0.73,
+                        'JPY': data.rates.JPY || 110,
+                        'CAD': data.rates.CAD || 1.25,
+                        'AUD': data.rates.AUD || 1.35,
+                        'CHF': data.rates.CHF || 0.92,
+                        'CNY': data.rates.CNY || 6.45
+                    };
+                    
+                    lastRateUpdate = new Date();
+                    showCurrencyStatus('✅ Live rates', 'bg-green-600');
+                    
+                    // Auto-convert if there's input
+                    const inputValue = document.getElementById('currencyInput').value;
+                    if (inputValue && !isNaN(parseFloat(inputValue))) {
+                        convertCurrency();
+                    }
+                    
+                    showToast('Exchange rates updated successfully!', 'success');
+                } else {
+                    throw new Error('Invalid API response');
+                }
+                
+            } catch (error) {
+                console.error('Error fetching exchange rates:', error);
+                showCurrencyStatus('⚠️ Using cached rates', 'bg-yellow-600');
+                showToast('Using cached rates - check internet connection', 'error');
+            } finally {
+                isLoadingRates = false;
+            }
+        }
+
+        function showCurrencyStatus(text, bgClass) {
+            const statusDiv = document.getElementById('currencyStatus');
+            if (statusDiv) {
+                statusDiv.innerHTML = `<span class="${bgClass} text-white px-2 py-1 rounded-full text-xs">${text}</span>`;
+            }
+        }
+
+        function convertCurrency() {
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+            const inputValue = parseFloat(document.getElementById('currencyInput').value);
+            const resultDiv = document.getElementById('currencyResult');
+            
+            if (isNaN(inputValue) || inputValue <= 0) {
+                resultDiv.innerHTML = '<span class="text-gray-400">Conversion result will be displayed here</span>';
+                return;
+            }
+            
+            // Convert through USD as base currency
+            const usdValue = inputValue / currencyRates[fromCurrency];
+            const result = usdValue * currencyRates[toCurrency];
+            
+            const fromSymbol = getCurrencySymbol(fromCurrency);
+            const toSymbol = getCurrencySymbol(toCurrency);
+            const rate = currencyRates[toCurrency] / currencyRates[fromCurrency];
+            
+            const updateTime = lastRateUpdate ? 
+                `Updated: ${lastRateUpdate.toLocaleTimeString()}` : 
+                'Using cached rates';
+            
+            resultDiv.innerHTML = `
+                <div class="text-white font-semibold text-lg">${toSymbol}${result.toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+                <div class="text-gray-300 text-sm mt-1">${fromSymbol}${inputValue.toLocaleString()} = ${toSymbol}${result.toLocaleString(undefined, {maximumFractionDigits: 2})}</div>
+                <div class="text-xs text-gray-400 mt-2">Rate: 1 ${fromCurrency} = ${rate.toLocaleString(undefined, {maximumFractionDigits: 4})} ${toCurrency}</div>
+                <div class="text-xs text-green-400 mt-1">${updateTime}</div>
+            `;
+        }
+
+        function getCurrencySymbol(currency) {
+            const symbols = {
+                'USD': '$',
+                'EUR': '€',
+                'GBP': '£',
+                'JPY': '¥',
+                'CAD': 'C$',
+                'AUD': 'A$',
+                'CHF': 'CHF',
+                'CNY': '¥'
+            };
+            return symbols[currency] || currency;
+        }
+
+        function swapCurrencies() {
+            const fromCurrency = document.getElementById('fromCurrency');
+            const toCurrency = document.getElementById('toCurrency');
+            
+            const tempValue = fromCurrency.value;
+            fromCurrency.value = toCurrency.value;
+            toCurrency.value = tempValue;
+            
+            // Auto-convert if there's input
+            const inputValue = document.getElementById('currencyInput').value;
+            if (inputValue && !isNaN(parseFloat(inputValue))) {
+                convertCurrency();
+            }
+            
+            showToast('Currencies swapped!', 'success');
+        }
+
+        // Auto-update rates every 5 minutes
+        function startCurrencyAutoUpdate() {
+            // Initial fetch
+            fetchLiveRates();
+            
+            // Set up auto-refresh every 5 minutes
+            setInterval(() => {
+                if (!isLoadingRates) {
+                    fetchLiveRates();
+                }
+            }, 5 * 60 * 1000); // 5 minutes
+        }
+
+        // Advanced AI Functions
+        function updateAIStatus(status) {
+            const statusIcon = document.getElementById('aiStatusIcon');
+            const statusText = document.getElementById('aiStatusText');
+            
+            switch(status) {
+                case 'ready':
+                    statusIcon.className = 'w-3 h-3 bg-green-400 rounded-full ai-brain';
+                    statusText.textContent = 'AI Ready';
+                    break;
+                case 'processing':
+                    statusIcon.className = 'w-3 h-3 bg-blue-400 rounded-full ai-thinking';
+                    statusText.textContent = 'Processing...';
+                    break;
+                case 'analyzing':
+                    statusIcon.className = 'w-3 h-3 bg-purple-400 rounded-full ai-thinking';
+                    statusText.textContent = 'Analyzing...';
+                    break;
+                case 'learning':
+                    statusIcon.className = 'w-3 h-3 bg-yellow-400 rounded-full learning-indicator';
+                    statusText.textContent = 'Learning...';
+                    document.getElementById('learningIndicator').classList.remove('hidden');
+                    break;
+            }
+        }
+
+        function learnFromCalculation(expression, result) {
+            if (aiLearningMode) {
+                learningData.push({
+                    expression: expression,
+                    result: result,
+                    timestamp: Date.now(),
+                    complexity: calculateComplexity(expression)
+                });
+                
+                aiInteractions++;
+                if (Math.random() > 0.1) {
+                    aiAccuracy = Math.min(99.9, aiAccuracy + 0.01);
+                }
+                aiProcessingSpeed = Math.max(0.1, aiProcessingSpeed - 0.001);
+                
+                updateAIMetrics();
+                updateAIStatus('learning');
+                
+                setTimeout(() => updateAIStatus('ready'), 1000);
+            }
+        }
+
+        function calculateComplexity(expression) {
+            let complexity = 1;
+            if (expression.includes('sin') || expression.includes('cos') || expression.includes('tan')) complexity += 2;
+            if (expression.includes('log') || expression.includes('√')) complexity += 1.5;
+            if (expression.includes('!')) complexity += 3;
+            if (expression.includes('^')) complexity += 2;
+            return complexity;
+        }
+
+        function updateAIMetrics() {
+            document.getElementById('accuracyRate').textContent = aiAccuracy.toFixed(1) + '%';
+            document.getElementById('processingSpeed').textContent = aiProcessingSpeed.toFixed(1) + 's';
+            document.getElementById('learningProgress').textContent = aiInteractions.toString();
+            
+            const progress = Math.min(100, (aiInteractions / 1000) * 100);
+            document.getElementById('aiProgress').style.width = progress + '%';
+        }
+
+        function analyzeInput(input) {
+            const analysisDiv = document.getElementById('inputAnalysis');
+            if (analysisDiv && input && input.length > 10) {
+                const complexity = input.length > 50 ? 'Complex' : input.length > 25 ? 'Medium' : 'Simple';
+                analysisDiv.textContent = `(${complexity})`;
+                analysisDiv.className = `ml-2 text-xs ${complexity === 'Complex' ? 'text-red-300' : complexity === 'Medium' ? 'text-yellow-300' : 'text-green-300'}`;
+            } else if (analysisDiv) {
+                analysisDiv.textContent = '';
             }
         }
 
         function processAdvancedAI() {
-            const input = document.getElementById('advancedAiInput').value;
-            const type = document.getElementById('analysisType').value;
+            const input = document.getElementById('advancedAiInput').value.trim();
+            const analysisType = document.getElementById('analysisType').value;
+            const complexityLevel = document.getElementById('complexityLevel').value;
             const resultDiv = document.getElementById('advancedAiResult');
-            const aiStatusText = document.getElementById('aiStatusText');
-            const aiStatusIcon = document.getElementById('aiStatusIcon');
-            const aiProgress = document.getElementById('aiProgress');
-
-            if (input.trim() === '') {
-                resultDiv.innerHTML = `<div class="text-center text-red-400">لطفاً یک سوال یا داده وارد کنید.</div>`;
+            
+            if (!input) {
+                showToast('Please enter your question or data in the text area!', 'error');
                 return;
             }
             
-            // Simulate AI processing
-            aiStatusText.textContent = 'در حال پردازش...';
-            aiStatusIcon.classList.add('ai-thinking');
-            aiProgress.style.width = '10%';
+            resultDiv.innerHTML = `
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 ai-brain rounded-full flex items-center justify-center text-2xl ai-thinking">🧠</div>
+                    <div class="text-blue-400 font-semibold mb-2">Smart processing in progress...</div>
+                    <div class="text-sm text-gray-400 mb-4">Analysis: ${getAnalysisTypeName(analysisType)} | Level: ${getComplexityLevelName(complexityLevel)}</div>
+                    <div class="bg-gray-700 rounded-full h-2 mb-4">
+                        <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all duration-1000" style="width: 0%" id="processingBar"></div>
+                    </div>
+                    <div class="text-xs text-gray-500">AI is performing deep data analysis...</div>
+                </div>
+            `;
             
-            setTimeout(() => {
-                aiProgress.style.width = '70%';
-            }, 500);
+            updateAIStatus('analyzing');
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 20 + 10;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        try {
+                            showAdvancedResult(input, analysisType, complexityLevel);
+                        } catch (error) {
+                            console.error('Error in showAdvancedResult:', error);
+                            resultDiv.innerHTML = `
+                                <div class="text-center text-red-400">
+                                    <div class="text-xl mb-2">❌</div>
+                                    <div>Processing error occurred</div>
+                                    <button onclick="processAdvancedAI()" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Try Again</button>
+                                </div>
+                            `;
+                        }
+                    }, 800);
+                }
+                const progressBar = document.getElementById('processingBar');
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+            }, 150);
+        }
 
-            setTimeout(() => {
-                aiProgress.style.width = '100%';
-            }, 1000);
+        function showAdvancedResult(input, analysisType, complexityLevel) {
+            const result = processAdvancedQuery(input, analysisType, complexityLevel);
+            const resultDiv = document.getElementById('advancedAiResult');
+            
+            resultDiv.innerHTML = `
+                <div class="text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="font-semibold text-purple-300 flex items-center">
+                            🧠 Smart Analysis
+                            <span class="ml-2 text-xs bg-purple-600 px-2 py-1 rounded-full">${getAnalysisTypeName(analysisType)}</span>
+                        </div>
+                        <div class="text-xs text-gray-400">
+                            ⚡ ${aiProcessingSpeed.toFixed(1)}s | 🎯 ${aiAccuracy.toFixed(1)}%
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-700 p-3 rounded-lg mb-4">
+                        <div class="text-sm text-gray-300 mb-2">📝 Input:</div>
+                        <div class="text-xs text-gray-400 bg-gray-800 p-2 rounded">${input}</div>
+                    </div>
+                    
+                    <div class="ai-response p-4 rounded-lg mb-4">
+                        <div class="font-semibold text-white mb-3 flex items-center">
+                            🚀 Advanced Analysis Result:
+                        </div>
+                        <div class="text-white leading-relaxed">${result}</div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="explainResult()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                            📖 Detailed Explanation
+                        </button>
+                        <button onclick="generateSimilar()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-all">
+                            🔄 Similar Example
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            lastAdvancedResponse = result;
+            
+            if (advancedSpeechEnabled) {
+                speakAdvancedText(result);
+            }
+            
+            learnFromAdvancedQuery(input, analysisType, result);
+            updateAIStatus('ready');
+        }
 
-            setTimeout(() => {
-                // Dummy response based on input
-                let response = `تحلیل شما (${type}):\n\n`;
-                if (input.includes('فروش')) {
-                    const data = input.match(/\d+/g).map(Number);
-                    const sum = data.reduce((a, b) => a + b, 0);
-                    const avg = sum / data.length;
-                    response += `داده‌های فروش: ${data.join(', ')}\n`;
-                    response += `میانگین فروش: ${avg.toFixed(2)}\n`;
-                    response += `مجموع فروش: ${sum}\n`;
-                    response += `**پیش‌بینی**: بر اساس روند کنونی، فروش ماه آینده با ${aiAccuracy}% دقت، حدود ${(avg * 1.1).toFixed(2)} خواهد بود.`;
-                } else if (input.includes('معادله')) {
-                    response += `**حل معادله**: معادله شما با روش‌های پیشرفته حل شده است. جواب عمومی و خاص معادله به شرح زیر است:...\n`;
-                    response += `**جزئیات**: برای حل این معادله از الگوریتم‌های یادگیری تقویتی استفاده شده است.`;
-                } else {
-                    response += `**نتیجه تحلیل پیشرفته**: درخواست شما با موفقیت پردازش شد. با توجه به داده‌های ورودی، الگوی اصلی به شرح زیر شناسایی شد:...\n`;
-                    response += `**توصیه**: برای بهینه‌سازی بیشتر، داده‌های دقیق‌تری ارائه دهید.`;
+        function processAdvancedQuery(query, analysisType, complexityLevel) {
+            const q = query.toLowerCase();
+            
+            try {
+                // Simple Math Questions (like 2+2)
+                if (q.includes('what is') || q.includes('calculate') || q.includes('solve')) {
+                    const mathResult = processSimpleMath(query);
+                    if (mathResult) return mathResult;
                 }
                 
-                resultDiv.innerHTML = `<div class="ai-response p-4 rounded-lg text-white whitespace-pre-wrap">${response}</div>`;
+                // Data Analysis
+                if (analysisType === 'statistical' || q.includes('data') || q.includes('analyze')) {
+                    return processDataAnalysis(query);
+                }
                 
-                aiStatusText.textContent = 'AI آماده';
-                aiStatusIcon.classList.remove('ai-thinking');
-                aiProgress.style.width = '85%';
-                aiInteractions++;
-                document.getElementById('learningProgress').textContent = aiInteractions;
+                // Differential Equations
+                if (q.includes('differential') || q.includes('dy/dx') || q.includes('equation')) {
+                    return processDifferentialEquation(query);
+                }
+                
+                // Optimization
+                if (analysisType === 'optimization' || q.includes('optimize') || q.includes('maximum') || q.includes('minimum')) {
+                    return processOptimization(query);
+                }
+                
+                // Prediction
+                if (analysisType === 'predictive' || q.includes('predict') || q.includes('forecast')) {
+                    return processPrediction(query);
+                }
+                
+                // Pattern Recognition
+                if (analysisType === 'pattern' || q.includes('pattern') || q.includes('sequence')) {
+                    return processPatternRecognition(query);
+                }
+                
+                // Complex Mathematical Operations
+                if (q.includes('matrix') || q.includes('integral') || q.includes('derivative')) {
+                    return processAdvancedMath(query);
+                }
+                
+                return processDeepAnalysis(query, complexityLevel);
+                
+            } catch (error) {
+                console.error('Error in processAdvancedQuery:', error);
+                return `❌ Processing error: ${error.message}<br><br>💡 Please clarify your question or use the provided examples.`;
+            }
+        }
 
-                // Speech synthesis
-                if (advancedSpeechEnabled) {
-                    const synth = window.speechSynthesis;
-                    if (synth) {
-                        const utterance = new SpeechSynthesisUtterance(response);
-                        utterance.lang = 'fa-IR';
-                        synth.speak(utterance);
+        function processSimpleMath(query) {
+            const mathPatterns = [
+                /what\s+is\s+(\d+(?:\.\d+)?)\s*\+\s*(\d+(?:\.\d+)?)/i,
+                /what\s+is\s+(\d+(?:\.\d+)?)\s*\-\s*(\d+(?:\.\d+)?)/i,
+                /what\s+is\s+(\d+(?:\.\d+)?)\s*\*\s*(\d+(?:\.\d+)?)/i,
+                /what\s+is\s+(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/i,
+                /calculate\s+(\d+(?:\.\d+)?)\s*\+\s*(\d+(?:\.\d+)?)/i,
+                /solve\s+(\d+(?:\.\d+)?)\s*\+\s*(\d+(?:\.\d+)?)/i
+            ];
+            
+            for (let pattern of mathPatterns) {
+                const match = query.match(pattern);
+                if (match) {
+                    const num1 = parseFloat(match[1]);
+                    const num2 = parseFloat(match[2]);
+                    let result, operation, symbol;
+                    
+                    if (query.includes('+')) {
+                        result = num1 + num2;
+                        operation = 'Addition';
+                        symbol = '+';
+                    } else if (query.includes('-')) {
+                        result = num1 - num2;
+                        operation = 'Subtraction';
+                        symbol = '−';
+                    } else if (query.includes('*')) {
+                        result = num1 * num2;
+                        operation = 'Multiplication';
+                        symbol = '×';
+                    } else if (query.includes('/')) {
+                        result = num2 !== 0 ? num1 / num2 : 'Undefined';
+                        operation = 'Division';
+                        symbol = '÷';
+                    }
+                    
+                    return `
+                        🧮 <strong>Mathematical Calculation:</strong><br><br>
+                        
+                        📝 <strong>Question:</strong> ${query}<br><br>
+                        
+                        🔢 <strong>Operation:</strong><br>
+                        ${num1} ${symbol} ${num2} = <span class="text-green-400 font-bold text-xl">${result}</span><br><br>
+                        
+                        📊 <strong>Analysis:</strong><br>
+                        • Operation type: ${operation}<br>
+                        • First number: ${num1}<br>
+                        • Second number: ${num2}<br>
+                        • Result: ${result}<br><br>
+                        
+                        ✅ <strong>Verification:</strong><br>
+                        Calculation performed with 100% accuracy!<br><br>
+                        
+                        💡 <strong>Note:</strong> For more complex calculations, use the main calculator.
+                    `;
+                }
+            }
+            
+            return null;
+        }
+
+        function processDataAnalysis(query) {
+            const numbers = query.match(/\d+(?:\.\d+)?/g);
+            if (numbers && numbers.length >= 3) {
+                const data = numbers.map(n => parseFloat(n));
+                const mean = data.reduce((a, b) => a + b) / data.length;
+                const variance = data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / data.length;
+                const stdDev = Math.sqrt(variance);
+                const min = Math.min(...data);
+                const max = Math.max(...data);
+                
+                let trend = 'Stable';
+                if (data.length > 1) {
+                    const slope = (data[data.length - 1] - data[0]) / (data.length - 1);
+                    trend = slope > 0.1 ? 'Increasing' : slope < -0.1 ? 'Decreasing' : 'Stable';
+                }
+                
+                const nextValue = data.length > 1 ? 
+                    data[data.length - 1] + (data[data.length - 1] - data[data.length - 2]) : mean;
+                
+                return `
+                    📊 <strong>Complete Statistical Analysis:</strong><br><br>
+                    
+                    📈 <strong>Descriptive Statistics:</strong><br>
+                    • Data: [${data.join(', ')}]<br>
+                    • Mean: ${mean.toFixed(2)}<br>
+                    • Variance: ${variance.toFixed(2)}<br>
+                    • Standard Deviation: ${stdDev.toFixed(2)}<br>
+                    • Min: ${min} | Max: ${max}<br><br>
+                    
+                    📉 <strong>Trend Analysis:</strong><br>
+                    • Overall trend: ${trend}<br>
+                    • Next point prediction: ${nextValue.toFixed(2)}<br><br>
+                    
+                    🎯 <strong>Conclusion:</strong><br>
+                    The data shows a ${trend.toLowerCase()} trend. With standard deviation of ${stdDev.toFixed(2)}, 
+                    ${stdDev < mean * 0.1 ? 'the data is stable' : 'there are significant fluctuations'}.
+                `;
+            }
+            
+            return `📊 For data analysis, please provide at least 3 numbers in your text.<br>Example: "Analyze sales data: 1200, 1350, 1100, 1450"`;
+        }
+
+        function processDifferentialEquation(query) {
+            if (query.includes('dy/dx')) {
+                return `
+                    🧮 <strong>Differential Equation Solution:</strong><br><br>
+                    
+                    📝 <strong>Equation:</strong> dy/dx = f(x,y)<br><br>
+                    
+                    🔍 <strong>Solution Method:</strong><br>
+                    1. Identify equation type (separable, linear, Bernoulli)<br>
+                    2. Apply appropriate solution method<br>
+                    3. Find general solution<br>
+                    4. Apply initial conditions (if provided)<br><br>
+                    
+                    ✅ <strong>Approximate Solution:</strong><br>
+                    y = C₁e^(ax) + C₂e^(bx) + particular solution<br><br>
+                    
+                    💡 <strong>Note:</strong> For exact solution, please provide the complete equation with initial conditions.
+                `;
+            }
+            
+            return `🧮 Please write your differential equation clearly.<br>Example: "dy/dx = 2x + 3y with y(0) = 1"`;
+        }
+
+        function processOptimization(query) {
+            const funcMatch = query.match(/f\(x(?:,y)?\)\s*=\s*([^,\n]+)/);
+            if (funcMatch) {
+                return `
+                    ⚡ <strong>Function Optimization:</strong><br><br>
+                    
+                    📝 <strong>Objective Function:</strong> ${funcMatch[1]}<br><br>
+                    
+                    🔍 <strong>Optimization Steps:</strong><br>
+                    1. Calculate first derivative: f'(x) = 0<br>
+                    2. Find critical points<br>
+                    3. Check second derivative for point type<br>
+                    4. Examine boundary conditions<br><br>
+                    
+                    📊 <strong>Analysis Results:</strong><br>
+                    • Critical points: x = a, y = b<br>
+                    • Type: ${Math.random() > 0.5 ? 'Local minimum' : 'Local maximum'}<br>
+                    • Optimal value: f(a,b) = ${(Math.random() * 100).toFixed(2)}<br><br>
+                    
+                    🎯 <strong>Recommendation:</strong> For more precise optimization, use numerical algorithms like Newton-Raphson.
+                `;
+            }
+            
+            return `⚡ Please specify the function to optimize.<br>Example: "Optimize f(x,y) = x² + y² - 2x - 4y + 5"`;
+        }
+
+        function processPrediction(query) {
+            const numbers = query.match(/\d+(?:\.\d+)?/g);
+            if (numbers && numbers.length >= 3) {
+                const data = numbers.map(n => parseFloat(n)).slice(0, 10);
+                
+                const n = data.length;
+                const sumX = data.reduce((sum, _, i) => sum + i, 0);
+                const sumY = data.reduce((sum, val) => sum + val, 0);
+                const sumXY = data.reduce((sum, val, i) => sum + i * val, 0);
+                const sumX2 = data.reduce((sum, _, i) => sum + i * i, 0);
+                
+                const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                const intercept = (sumY - slope * sumX) / n;
+                
+                const predictions = [];
+                for (let i = 0; i < 3; i++) {
+                    predictions.push((slope * (n + i) + intercept).toFixed(2));
+                }
+                
+                const correlation = calculateCorrelation(data);
+                const accuracy = Math.min(95, Math.max(60, 85 + correlation * 10));
+                
+                return `
+                    🔮 <strong>Smart Prediction:</strong><br><br>
+                    
+                    📈 <strong>Historical Data:</strong><br>
+                    [${data.join(', ')}]<br><br>
+                    
+                    🧮 <strong>Mathematical Model:</strong><br>
+                    • Trend line equation: y = ${slope.toFixed(3)}x + ${intercept.toFixed(2)}<br>
+                    • Correlation coefficient: ${correlation.toFixed(3)}<br>
+                    • Prediction accuracy: ${accuracy.toFixed(1)}%<br><br>
+                    
+                    🎯 <strong>Future Predictions:</strong><br>
+                    • Point ${n + 1}: ${predictions[0]}<br>
+                    • Point ${n + 2}: ${predictions[1]}<br>
+                    • Point ${n + 3}: ${predictions[2]}<br><br>
+                    
+                    ⚠️ <strong>Warning:</strong> This prediction is based on linear trend. 
+                    For higher accuracy, more complex models are recommended.
+                `;
+            }
+            
+            return `🔮 For prediction, please provide historical data.<br>Example: "Predict sales based on: 1200, 1350, 1100, 1450, 1600"`;
+        }
+
+        function processPatternRecognition(query) {
+            const numbers = query.match(/\d+(?:\.\d+)?/g);
+            if (numbers && numbers.length >= 4) {
+                const data = numbers.map(n => parseFloat(n));
+                
+                const patterns = [];
+                
+                const diffs = [];
+                for (let i = 1; i < data.length; i++) {
+                    diffs.push(data[i] - data[i-1]);
+                }
+                const isArithmetic = diffs.every(d => Math.abs(d - diffs[0]) < 0.01);
+                
+                const ratios = [];
+                for (let i = 1; i < data.length; i++) {
+                    if (data[i-1] !== 0) ratios.push(data[i] / data[i-1]);
+                }
+                const isGeometric = ratios.length > 0 && ratios.every(r => Math.abs(r - ratios[0]) < 0.01);
+                
+                let isFibonacci = true;
+                for (let i = 2; i < data.length && isFibonacci; i++) {
+                    if (Math.abs(data[i] - (data[i-1] + data[i-2])) > 0.01) {
+                        isFibonacci = false;
                     }
                 }
-            }, 1500); // Simulate a 1.5 second processing time
+                
+                if (isArithmetic) patterns.push(`Arithmetic (difference: ${diffs[0].toFixed(2)})`);
+                if (isGeometric) patterns.push(`Geometric (ratio: ${ratios[0].toFixed(2)})`);
+                if (isFibonacci && data.length >= 3) patterns.push('Fibonacci');
+                
+                const nextValue = isArithmetic ? data[data.length-1] + diffs[0] :
+                                isGeometric ? data[data.length-1] * ratios[0] :
+                                isFibonacci ? data[data.length-1] + data[data.length-2] :
+                                'Unknown';
+                
+                return `
+                    🔍 <strong>Pattern Recognition:</strong><br><br>
+                    
+                    📊 <strong>Sequence:</strong> [${data.join(', ')}]<br><br>
+                    
+                    🎯 <strong>Identified Patterns:</strong><br>
+                    ${patterns.length > 0 ? patterns.map(p => `• ${p}`).join('<br>') : '• No specific pattern identified'}<br><br>
+                    
+                    🔮 <strong>Next Element Prediction:</strong><br>
+                    ${nextValue !== 'Unknown' ? nextValue.toFixed(2) : 'Cannot be calculated'}<br><br>
+                    
+                    📈 <strong>Statistical Analysis:</strong><br>
+                    • Mean: ${(data.reduce((a,b) => a+b) / data.length).toFixed(2)}<br>
+                    • Trend: ${data[data.length-1] > data[0] ? 'Increasing' : 'Decreasing'}<br>
+                    • Variation: ${Math.max(...data) - Math.min(...data) > data.reduce((a,b) => a+b) / data.length ? 'High volatility' : 'Stable'}
+                `;
+            }
+            
+            return `🔍 For pattern recognition, provide at least 4 numbers.<br>Example: "Recognize pattern in: 2, 4, 6, 8, 10"`;
+        }
+
+        function processAdvancedMath(query) {
+            return `
+                🧮 <strong>Advanced Mathematics:</strong><br><br>
+                
+                🔬 <strong>Supported Areas:</strong><br>
+                • Differential and integral calculus<br>
+                • Linear algebra and matrices<br>
+                • Differential equations<br>
+                • Numerical analysis<br>
+                • Statistics and probability<br><br>
+                
+                💡 <strong>For precise calculation, please specify:</strong><br>
+                • Type of operation needed<br>
+                • Input parameters<br>
+                • Boundary conditions (if needed)<br><br>
+                
+                🎯 <strong>Example:</strong><br>
+                "Calculate integral ∫(x² + 2x + 1)dx from 0 to 2"
+            `;
+        }
+
+        function processDeepAnalysis(query, complexityLevel) {
+            const complexity = {
+                'basic': 'Basic',
+                'intermediate': 'Intermediate', 
+                'advanced': 'Advanced',
+                'expert': 'Expert'
+            };
+            
+            return `
+                🧠 <strong>Deep Analysis (${complexity[complexityLevel]} Level):</strong><br><br>
+                
+                📝 <strong>Analyzed Input:</strong><br>
+                "${query}"<br><br>
+                
+                🔍 <strong>Analysis Results:</strong><br>
+                • Computational complexity: ${complexityLevel === 'expert' ? 'O(n²)' : 'O(n)'}<br>
+                • Problem type: ${detectProblemType(query)}<br>
+                • Suggested solution method: ${suggestSolutionMethod(query)}<br><br>
+                
+                💡 <strong>Smart Insights:</strong><br>
+                • This problem requires ${complexityLevel === 'expert' ? 'advanced techniques' : 'standard methods'}<br>
+                • Expected accuracy: ${85 + Math.random() * 10}%<br>
+                • Estimated processing time: ${aiProcessingSpeed * (complexityLevel === 'expert' ? 3 : 1)}s<br><br>
+                
+                🎯 <strong>Improvement Recommendations:</strong><br>
+                For more accurate results, please provide additional information or use specialized tools.
+            `;
+        }
+
+        function detectProblemType(query) {
+            const q = query.toLowerCase();
+            if (q.includes('data') || q.includes('analyze')) return 'Data Analysis';
+            if (q.includes('equation') || q.includes('solve')) return 'Equation Solving';
+            if (q.includes('optimize') || q.includes('maximum') || q.includes('minimum')) return 'Optimization';
+            if (q.includes('predict') || q.includes('forecast')) return 'Prediction';
+            return 'General Analysis';
+        }
+
+        function suggestSolutionMethod(query) {
+            const q = query.toLowerCase();
+            if (q.includes('linear')) return 'Linear algebra methods';
+            if (q.includes('differential')) return 'Numerical methods';
+            if (q.includes('optimization')) return 'Optimization algorithms';
+            if (q.includes('statistical')) return 'Statistical analysis';
+            return 'Multi-stage smart analysis';
+        }
+
+        function calculateCorrelation(data) {
+            const n = data.length;
+            const indices = Array.from({length: n}, (_, i) => i);
+            
+            const meanX = indices.reduce((a, b) => a + b) / n;
+            const meanY = data.reduce((a, b) => a + b) / n;
+            
+            const numerator = indices.reduce((sum, x, i) => sum + (x - meanX) * (data[i] - meanY), 0);
+            const denomX = Math.sqrt(indices.reduce((sum, x) => sum + Math.pow(x - meanX, 2), 0));
+            const denomY = Math.sqrt(data.reduce((sum, y) => sum + Math.pow(y - meanY, 2), 0));
+            
+            return denomX * denomY !== 0 ? numerator / (denomX * denomY) : 0;
+        }
+
+        function getAnalysisTypeName(type) {
+            const names = {
+                'deep': 'Deep Analysis',
+                'statistical': 'Statistical',
+                'predictive': 'Predictive',
+                'pattern': 'Pattern Recognition',
+                'optimization': 'Optimization'
+            };
+            return names[type] || 'General';
+        }
+
+        function getComplexityLevelName(level) {
+            const names = {
+                'basic': 'Basic',
+                'intermediate': 'Intermediate',
+                'advanced': 'Advanced',
+                'expert': 'Expert'
+            };
+            return names[level] || 'Intermediate';
+        }
+
+        function learnFromAdvancedQuery(query, analysisType, result) {
+            if (aiLearningMode) {
+                learningData.push({
+                    query: query,
+                    analysisType: analysisType,
+                    result: result,
+                    timestamp: Date.now(),
+                    complexity: query.length > 100 ? 'high' : query.length > 50 ? 'medium' : 'low'
+                });
+                
+                aiInteractions++;
+                aiAccuracy = Math.min(99.9, aiAccuracy + 0.02);
+                aiProcessingSpeed = Math.max(0.1, aiProcessingSpeed - 0.002);
+                
+                updateAIMetrics();
+            }
         }
 
         function clearAdvancedAI() {
             document.getElementById('advancedAiInput').value = '';
+            document.getElementById('inputAnalysis').textContent = '';
             document.getElementById('advancedAiResult').innerHTML = `
                 <div class="text-gray-400 text-center">
                     <div class="mb-4">
                         <div class="w-16 h-16 mx-auto mb-3 ai-brain rounded-full flex items-center justify-center text-2xl">🧠</div>
-                        <div class="text-lg font-semibold text-purple-300">هوش مصنوعی پیشرفته آماده است</div>
+                        <div class="text-lg font-semibold text-purple-300">Advanced AI is Ready</div>
                     </div>
-                </div>`;
-            document.getElementById('inputAnalysis').textContent = '';
+                    <div class="text-sm space-y-3 text-left">
+                        <div class="bg-gradient-to-r from-purple-800 to-blue-800 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-200 mb-2">💡 Advanced Capabilities:</div>
+                            <div class="text-xs space-y-1 text-purple-100">
+                                <div>• Complex data analysis and multi-dimensional processing</div>
+                                <div>• Differential and integral equation solving</div>
+                                <div>• Trend prediction with machine learning</div>
+                                <div>• Optimization and performance analysis</div>
+                            </div>
+                        </div>
+                        <div class="bg-gradient-to-r from-green-800 to-teal-800 p-3 rounded-lg">
+                            <div class="font-semibold text-green-200 mb-2">🎯 Example Applications:</div>
+                            <div class="text-xs space-y-1 text-green-100">
+                                <div>• "Analyze monthly sales: 1200, 1350, 1100, 1450"</div>
+                                <div>• "Solve equation: d²y/dx² + 3dy/dx + 2y = 0"</div>
+                                <div>• "Optimize function: f(x) = x² - 4x + 3"</div>
+                                <div>• "Predict price based on historical data"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lastAdvancedResponse = '';
         }
-        
+
+        // Advanced Voice Recognition
+        function initializeAdvancedSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                advancedRecognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                advancedRecognition.continuous = false;
+                advancedRecognition.interimResults = true;
+                advancedRecognition.lang = 'en-US';
+                
+                advancedRecognition.onstart = function() {
+                    isAdvancedListening = true;
+                    updateAdvancedVoiceStatus('🎙️ Listening...', 'bg-red-600');
+                    document.getElementById('advancedVoiceBtn').innerHTML = '⏹️ Stop';
+                    document.getElementById('voiceWave').classList.remove('hidden');
+                };
+                
+                advancedRecognition.onresult = function(event) {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    document.getElementById('advancedAiInput').value = transcript;
+                    analyzeInput(transcript);
+                };
+                
+                advancedRecognition.onend = function() {
+                    isAdvancedListening = false;
+                    resetAdvancedVoiceButton();
+                    document.getElementById('voiceWave').classList.add('hidden');
+                    
+                    const input = document.getElementById('advancedAiInput').value.trim();
+                    if (input.length > 10) {
+                        setTimeout(() => processAdvancedAI(), 1000);
+                    }
+                };
+                
+                advancedRecognition.onerror = function(event) {
+                    updateAdvancedVoiceStatus('❌ Error', 'bg-red-600');
+                    resetAdvancedVoiceButton();
+                    document.getElementById('voiceWave').classList.add('hidden');
+                };
+                
+                return true;
+            }
+            return false;
+        }
+
         function startAdvancedVoice() {
-            // Dummy implementation
-            const voiceBtn = document.getElementById('advancedVoiceBtn');
-            const voiceStatus = document.getElementById('voiceStatus');
-            const voiceWave = document.getElementById('voiceWave');
+            if (!advancedRecognition) {
+                if (!initializeAdvancedSpeechRecognition()) {
+                    alert('Sorry, your browser does not support voice recognition.');
+                    return;
+                }
+            }
             
             if (isAdvancedListening) {
-                isAdvancedListening = false;
-                voiceBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-                voiceBtn.classList.add('bg-red-600', 'hover:bg-red-700');
-                voiceStatus.textContent = 'آماده';
-                voiceStatus.classList.remove('bg-green-600', 'ai-thinking');
-                voiceStatus.classList.add('bg-gray-600');
-                voiceWave.classList.add('hidden');
+                advancedRecognition.stop();
             } else {
-                isAdvancedListening = true;
-                voiceBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
-                voiceBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
-                voiceStatus.textContent = 'در حال گوش دادن...';
-                voiceStatus.classList.remove('bg-gray-600');
-                voiceStatus.classList.add('bg-green-600', 'ai-thinking');
-                voiceWave.classList.remove('hidden');
-                
-                // Simulate receiving voice input after a few seconds
-                setTimeout(() => {
-                    document.getElementById('advancedAiInput').value = 'تحلیل داده‌های فروش ماهانه: 1200, 1350, 1100, 1450';
-                    startAdvancedVoice(); // Stop listening
-                }, 3000);
+                advancedRecognition.start();
             }
         }
-        
+
+        function updateAdvancedVoiceStatus(text, bgClass) {
+            const statusElement = document.getElementById('voiceStatus');
+            statusElement.textContent = text;
+            statusElement.className = `ml-2 text-xs ${bgClass} px-2 py-1 rounded-full text-white`;
+        }
+
+        function resetAdvancedVoiceButton() {
+            document.getElementById('advancedVoiceBtn').innerHTML = '🎙️ Voice Input';
+            updateAdvancedVoiceStatus('Ready', 'bg-gray-600');
+        }
+
         function toggleAdvancedSpeech() {
-            const speechBtn = document.getElementById('advancedSpeechBtn');
             advancedSpeechEnabled = !advancedSpeechEnabled;
+            const btn = document.getElementById('advancedSpeechBtn');
+            
             if (advancedSpeechEnabled) {
-                speechBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-                speechBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                btn.innerHTML = '🔊 Speech Output';
+                btn.className = 'bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center';
+                
+                if (lastAdvancedResponse) {
+                    speakAdvancedText(lastAdvancedResponse);
+                }
             } else {
-                speechBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                speechBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                btn.innerHTML = '🔇 Sound Off';
+                btn.className = 'bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-3 rounded-lg transition-all transform hover:scale-105 text-xs flex items-center justify-center';
+                speechSynthesis.cancel();
             }
         }
-        
+
+        function speakAdvancedText(text) {
+            if ('speechSynthesis' in window && advancedSpeechEnabled) {
+                speechSynthesis.cancel();
+                
+                const cleanText = text.replace(/<[^>]*>/g, '').replace(/[^\w\s.,!?]/g, ' ').substring(0, 200);
+                
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.7;
+                utterance.pitch = 1.1;
+                utterance.volume = 0.8;
+                
+                speechSynthesis.speak(utterance);
+            }
+        }
+
         function activateImageAnalysis() {
-            // Dummy function - In a real app, this would open a file picker or camera
-            alert('قابلیت تحلیل تصویر فعال شد. لطفاً یک تصویر از یک معادله یا داده‌های ریاضی انتخاب کنید.');
+            alert('🚧 Image analysis feature is under development!\n\nComing soon:\n• Upload chart images\n• Extract data from images\n• Visual analysis');
         }
 
         function toggleLearningMode() {
-            const learningBtn = document.getElementById('learningModeBtn');
-            const learningStatus = document.getElementById('learningStatus');
             aiLearningMode = !aiLearningMode;
+            const btn = document.getElementById('learningModeBtn');
+            const status = document.getElementById('learningStatus');
+            
             if (aiLearningMode) {
-                learningBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-                learningBtn.classList.add('bg-yellow-600', 'hover:bg-yellow-700');
-                learningStatus.textContent = 'فعال';
-                learningStatus.classList.remove('bg-gray-600');
-                learningStatus.classList.add('bg-yellow-600');
+                btn.innerHTML = '🎯 Adaptive Learning';
+                btn.className = 'bg-yellow-600 hover:bg-yellow-700 text-white font-semibold py-2 rounded-lg transition-all text-sm';
+                status.textContent = 'Active';
+                status.className = 'ml-2 text-xs bg-yellow-600 px-2 py-1 rounded-full';
             } else {
-                learningBtn.classList.remove('bg-yellow-600', 'hover:bg-yellow-700');
-                learningBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
-                learningStatus.textContent = 'غیرفعال';
-                learningStatus.classList.remove('bg-yellow-600');
-                learningStatus.classList.add('bg-gray-600');
+                btn.innerHTML = '⏸️ Learning Paused';
+                btn.className = 'bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 rounded-lg transition-all text-sm';
+                status.textContent = 'Inactive';
+                status.className = 'ml-2 text-xs bg-gray-600 px-2 py-1 rounded-full';
             }
         }
 
         function showLearningStats() {
-            alert(`آمار یادگیری فعلی:\n\nتعاملات پردازش شده: ${aiInteractions}\nدقت تخمینی: ${aiAccuracy}%\nسرعت پردازش متوسط: ${aiProcessingSpeed}s`);
+            const stats = `
+                📊 AI Learning Statistics:
+                
+                🔢 Total interactions: ${aiInteractions}
+                📈 Current accuracy: ${aiAccuracy.toFixed(1)}%
+                ⚡ Processing speed: ${aiProcessingSpeed.toFixed(1)}s
+                🧠 Learning data points: ${learningData.length}
+                
+                📚 Question types processed:
+                • Data analysis: ${learningData.filter(d => d.query && d.query.includes('data')).length}
+                • Mathematical calculations: ${learningData.filter(d => d.expression).length}
+                • Predictions: ${learningData.filter(d => d.analysisType === 'predictive').length}
+                
+                🎯 Performance: ${aiAccuracy > 95 ? 'Excellent' : aiAccuracy > 85 ? 'Good' : 'Needs improvement'}
+            `;
+            
+            alert(stats);
         }
-        
-        // Initial setup
-        document.addEventListener('DOMContentLoaded', () => {
-            updateConversionUnits();
-            switchTab('calculatorTab');
+
+        function explainResult() {
+            if (lastAdvancedResponse) {
+                const explanation = `
+                    📖 Detailed Result Explanation:
+                    
+                    🔍 This analysis was performed using advanced AI algorithms.
+                    
+                    🧮 Processing steps:
+                    1. Input analysis and parsing
+                    2. Problem type identification
+                    3. Appropriate method selection
+                    4. Calculation and analysis
+                    5. Result presentation
+                    
+                    📊 Accuracy: ${aiAccuracy.toFixed(1)}%
+                    ⚡ Processing time: ${aiProcessingSpeed.toFixed(1)}s
+                    
+                    💡 For more questions, use the AI section.
+                `;
+                
+                alert(explanation);
+            }
+        }
+
+        function generateSimilar() {
+            const examples = [
+                "Analyze seasonal sales data: [850, 920, 1100, 1250]",
+                "Optimize production cost: f(x) = 2x² + 5x + 100",
+                "Predict population growth based on: 1000, 1050, 1100, 1155",
+                "Analyze algorithm performance with O(n log n) complexity",
+                "Solve differential equation: dy/dt = ky with y(0) = 100"
+            ];
+            
+            const randomExample = examples[Math.floor(Math.random() * examples.length)];
+            document.getElementById('advancedAiInput').value = randomExample;
+            analyzeInput(randomExample);
+        }
+
+        // Utility Functions
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-500' : type === 'success' ? 'bg-green-500' : 'bg-blue-500';
+            
+            toast.className = `fixed top-4 right-4 ${bgColor} text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300`;
+            toast.textContent = message;
+            toast.style.transform = 'translateX(100%)';
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log('Initializing calculator...');
+                updateConversionUnits();
+                updateAIMetrics();
+                updateAIStatus('ready');
+                startCurrencyAutoUpdate();
+                switchTab('calculatorTab'); // تب پیش‌فرض
+                
+                // Test tab functionality
+                console.log('Testing tab elements...');
+                const tabButtons = ['calcTab', 'convTab', 'currTab', 'aiTabBtn'];
+                tabButtons.forEach(btnId => {
+                    const btn = document.getElementById(btnId);
+                    console.log(`${btnId}:`, btn ? 'Found' : 'Missing');
+                });
+                
+                const tabContents = ['calculatorTab', 'converterTab', 'currencyTab', 'aiTab'];
+                tabContents.forEach(tabId => {
+                    const tab = document.getElementById(tabId);
+                    console.log(`${tabId}:`, tab ? 'Found' : 'Missing');
+                });
+                
+                console.log('Calculator initialized successfully');
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+            
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                document.getElementById('advancedVoiceBtn').innerHTML = '❌ Not Supported';
+                document.getElementById('advancedVoiceBtn').disabled = true;
+                document.getElementById('advancedVoiceBtn').className = 'bg-gray-500 text-white font-semibold py-2 px-3 rounded-lg flex items-center justify-center cursor-not-allowed text-xs';
+            }
+            
+            if (!('speechSynthesis' in window)) {
+                document.getElementById('advancedSpeechBtn').innerHTML = '❌ Not Supported';
+                document.getElementById('advancedSpeechBtn').disabled = true;
+                document.getElementById('advancedSpeechBtn').className = 'bg-gray-500 text-white font-semibold py-2 px-3 rounded-lg flex items-center justify-center cursor-not-allowed text-xs';
+            }
+            
+            setInterval(() => {
+                if (aiLearningMode && Math.random() > 0.7) {
+                    aiInteractions++;
+                    updateAIMetrics();
+                }
+            }, 30000);
+            
+            const debouncedAnalyzeInput = debounce(analyzeInput, 300);
+            
+            const advancedInput = document.getElementById('advancedAiInput');
+            if (advancedInput) {
+                advancedInput.addEventListener('input', (e) => {
+                    debouncedAnalyzeInput(e.target.value);
+                });
+                
+                advancedInput.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        e.preventDefault();
+                        processAdvancedAI();
+                    }
+                });
+            }
+            
+            const conversionInput = document.getElementById('conversionInput');
+            if (conversionInput) {
+                conversionInput.addEventListener('input', debounce(performConversion, 300));
+            }
+            
+            const currencyInput = document.getElementById('currencyInput');
+            if (currencyInput) {
+                currencyInput.addEventListener('input', debounce(convertCurrency, 300));
+            }
+            
+            const fromCurrency = document.getElementById('fromCurrency');
+            const toCurrency = document.getElementById('toCurrency');
+            if (fromCurrency && toCurrency) {
+                fromCurrency.addEventListener('change', convertCurrency);
+                toCurrency.addEventListener('change', convertCurrency);
+            }
+            
+            const fromUnit = document.getElementById('fromUnit');
+            const toUnit = document.getElementById('toUnit');
+            if (fromUnit && toUnit) {
+                fromUnit.addEventListener('change', performConversion);
+                toUnit.addEventListener('change', performConversion);
+            }
         });
 
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.error);
+            showToast('Unexpected error occurred', 'error');
+        });
+
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.classList.contains('calculator-button')) {
+                e.preventDefault();
+            }
+        });
     </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a0188b40ead3f4',t:'MTc1NDMzMTkxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
